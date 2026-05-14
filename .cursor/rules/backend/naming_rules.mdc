@@ -1,0 +1,42 @@
+---
+alwaysApply: false
+---
+Service Layer
+Format: {Verb} + {Target}
+Class Name: {Noun}Service
+Commonly Used Verbs:
+fetch: Retrieve a single record
+fetchList: Retrieve multiple records
+create: Create a new record
+update: Update a single record
+bulkUpdate: Update multiple records
+destroy: Delete a single record
+bulkDestroy: Delete multiple records
+count: Count the number of records
+exists: Check for existence
+
+Repository Layer
+Format: {Verb} + {Target}
+Class Name: {Noun}Repository
+Commonly Used Verbs:
+find: Retrieve a single record
+search: Search for multiple records
+insert: Add a single record
+bulkInsert: Add multiple records
+update: Update a single record
+bulkUpdate: Update multiple records
+delete: Delete a single record
+bulkDelete: Delete multiple records
+
+Controller Layer
+Format: {Verb} + {Target}
+Class Name: {Noun}Controller (assumed, as not specified)
+Commonly Used Verbs:
+index: Display a list
+create: Display a form for creating a new record
+store: Process the creation of a new record
+show: Display details of a single record
+edit: Display a form for editing a record
+update: Process the update of a record
+destroy: Process the deletion of a single record
+bulkDestroy: Process the deletion of multiple records
