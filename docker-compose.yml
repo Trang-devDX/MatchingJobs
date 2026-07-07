@@ -1,0 +1,139 @@
+networks:
+  harukky-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  minio_data:
+
+services:
+  frontend-public:
+    build: 
+      dockerfile: ./docker/frontend-public/Dockerfile
+      context: .
+    networks:
+      - harukky-network
+    ports:
+      - ${FRONTEND_PUBLIC_PORT:-5175}:80
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+  frontend-company:
+    build: 
+      dockerfile: ./docker/frontend-company/Dockerfile
+      context: .
+    networks:
+      - harukky-network
+    ports:
+      - ${FRONTEND_COMPANY_PORT:-5174}:80
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+  frontend-admin:
+    build: 
+      dockerfile: ./docker/frontend-admin/Dockerfile
+      context: .
+    networks:
+      - harukky-network
+    ports:
+      - ${FRONTEND_ADMIN_PORT:-5173}:80
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
+
+  api:
+    build: ./docker/backend
+    volumes:
+      - ./backend:/usr/share/nginx/html/laravel
+    networks:
+      - harukky-network
+    ports:
+      - ${API_PORT:-8000}:80
+    user: www-data:www-data
+    environment:
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+    depends_on:
+      psql:
+        condition: service_started
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    restart: unless-stopped
+
+  psql:
+    image: postgres:12.7-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-harukky}
+      POSTGRES_USER: ${POSTGRES_USER:-harukky}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-harukky}
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    networks:
+      - harukky-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    networks:
+      - harukky-network
+    restart: unless-stopped
+  
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
+    command: minio server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio123}
+    ports:
+      - ${MINIO_PORT:-9000}:9000
+      - ${MINIO_PORT_CONSOLE:-9001}:9001
+    networks:
+      - harukky-network
+    restart: unless-stopped
+
+  mailcatcher:
+    image: dockage/mailcatcher:0.7.1
+    ports:
+      - ${MAILCATCHER_PUBLIC_PORT:-1080}:1080
+      - ${MAILCATCHER_PORT:-1025}:1025
+    networks:
+      - harukky-network
+    restart: unless-stopped
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    environment:
+      SWAGGER_JSON: /usr/share/nginx/html/docs/api.yaml
+      PERSIST_AUTHORIZATION: "true"
+      DOC_EXPANSION: "none"
+    volumes:
+      - ./docs:/usr/share/nginx/html/docs
+    ports:
+      - 8081:8080
+    restart: unless-stopped
+
+  wiremock:
+    image: "wiremock/wiremock:latest"
+    ports:
+      - 8080:8080
+    volumes:
+      - ./wiremock/extensions:/var/wiremock/extensions
+      - ./wiremock/__files:/home/wiremock/__files
+      - ./wiremock/mappings:/home/wiremock/mappings
+    entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
+    networks:
+      - harukky-network
+    restart: unless-stopped

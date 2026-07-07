@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/recaptcha/api/siteverify/failure",
+    "bodyPatterns": []
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"success\": false, \"score\": 0.1, \"challenge_ts\": \"2025-12-31T00:00:00Z\", \"hostname\": \"localhost\", \"error-codes\": [\"invalid-input-secret\"]}"
+  }
+}

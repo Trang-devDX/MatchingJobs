@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/recaptcha/api/siteverify/success",
+    "bodyPatterns": []
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"success\": true, \"score\": 0.9, \"challenge_ts\": \"2025-12-31T00:00:00Z\", \"hostname\": \"localhost\"}"
+  }
+}

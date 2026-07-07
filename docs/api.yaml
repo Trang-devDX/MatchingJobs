@@ -1,0 +1,268 @@
+openapi: "3.0.0"
+info:
+  title: "MatchingJobs Users API"
+  version: "1.0.0"
+  description: "API documentation for Users CRUD operations"
+
+servers:
+  - url: "http://localhost:8000"
+
+tags:
+  - name: Users
+    description: "User management endpoints"
+
+paths:
+  /api/users:
+    get:
+      tags: [Users]
+      summary: "Get users"
+      operationId: getUsers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: type
+          in: query
+          description: "1: Job Seeker, 2: Staff, 9: Administrator"
+          schema:
+            $ref: "#/components/schemas/UserType"
+      responses:
+        "200":
+          description: "Users retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+    post:
+      tags: [Users]
+      summary: "Create user"
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+      responses:
+        "201":
+          description: "User created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /api/users/{id}:
+    parameters:
+      - $ref: "#/components/parameters/UserId"
+
+    get:
+      tags: [Users]
+      summary: "Get user"
+      operationId: getUser
+      responses:
+        "200":
+          description: "User retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+    put:
+      tags: [Users]
+      summary: "Update user"
+      operationId: updateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+      responses:
+        "200":
+          description: "User updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+    delete:
+      tags: [Users]
+      summary: "Delete user"
+      operationId: deleteUser
+      responses:
+        "200":
+          description: "User deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message]
+                properties:
+                  message:
+                    type: string
+                    example: "User deleted successfully."
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+components:
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: "User UUID"
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    UserType:
+      type: integer
+      enum: [1, 2, 9]
+      example: 1
+
+    UserRequest:
+      type: object
+      required: [type]
+      properties:
+        type:
+          $ref: "#/components/schemas/UserType"
+
+    User:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        type:
+          $ref: "#/components/schemas/UserType"
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2026-07-07T10:30:00+07:00"
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2026-07-07T10:30:00+07:00"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+        deleted_by:
+          type: string
+          format: uuid
+          nullable: true
+
+    UserResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/User"
+
+    PaginationMeta:
+      type: object
+      required: [current_page, per_page, total]
+      properties:
+        current_page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          example: 1
+
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          example: "An error occurred."
+
+    ValidationErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/ErrorResponse"
+        - type: object
+          properties:
+            errors:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+
+  responses:
+    NotFound:
+      description: "User not found"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "User not found."
+
+    ValidationError:
+      description: "Validation failed"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationErrorResponse"
+
+    ServerError:
+      description: "Internal server error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
