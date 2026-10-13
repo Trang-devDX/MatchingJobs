@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignUuid('created_by')->nullable();
             $table->foreignUuid('updated_by')->nullable();
             $table->foreignUuid('deleted_by')->nullable();
-            $table->timestamps();
         });
 
         Schema::table('users', function (Blueprint $table) {

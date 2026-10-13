@@ -1,4 +1,4 @@
-# Harukky Job Search Application
+# MatchingJobs — Job Matching Platform
 
 
 ### Frontend
@@ -9,7 +9,7 @@
 
 ### Backend
 
-- **Laravel API (backend)** - RESTful API backend built with Laravel 11 that serves all frontend applications, handles business logic, database operations, and third-party integrations
+- **Laravel API (backend)** - API backend built with Laravel 12 that serves the frontend applications and handles business logic and database operations
 
 ## System Architecture Diagram
 
@@ -42,11 +42,11 @@
 
 # Architecture
 
-- **Backend**: Laravel 11 with PHP 8.3-FPM
+- **Backend**: Laravel 12 with PHP 8.3-FPM
 - **Frontend**: React/TypeScript Node 20+
 - **Database**: PostgreSQL 12.7
 - **Cache**: Redis 7
-- **Storage**: MinIO (S3-compatible)
+- **Storage**: Laravel local disk by default; S3-compatible storage can be configured separately
 - **Web Server**: Nginx
 - **Email Testing**: Mailcatcher
 - **API Documentation**: Swagger UI
@@ -76,43 +76,48 @@ The following PHP modules are required for the backend:
   cd harukky
   ```
 
-- Create file environment variables
+- Create the backend environment file
 
   ```bash
-  cp .env.example .env
   cp backend/.env.example backend/.env
-  cp frontend/public/.env.example frontend/public/.env
-  cp frontend/company/.env.example frontend/company/.env
-  cp frontend/admin/.env.example frontend/admin/.env
   ```
 
-- Install laravel dependencies
+- Install Laravel dependencies
 
   ```bash
-  docker compose run --rm api composer install
+  docker compose run --rm --no-deps --user www-data api composer install
   ```
 
-- Start the development environment
+- Generate the Laravel application key
 
   ```bash
-  make up
-
-  # Or without Make:
-  docker compose up -d --remove-orphans
+  docker compose run --rm --no-deps --user www-data api php artisan key:generate
   ```
 
-- Create S3 buckets in MinIO
+- Start PostgreSQL, Redis, and Mailcatcher, then create the database tables
 
-  Access MinIO Console at [http://localhost:9001](http://localhost:9001)
+  ```bash
+  docker compose up -d psql redis mailcatcher
+  docker compose run --rm --user www-data api php artisan migrate
+  ```
 
-  **Login credentials:**
+- Build and start the Docker services
 
-  - Username: `minio` (or check MINIO_ROOT_USER in .env)
-  - Password: `minio123` (or check MINIO_ROOT_PASSWORD in .env)
+  ```bash
+  docker compose up -d --build --remove-orphans
+  ```
 
-  **Create required buckets:**
+The default PostgreSQL database and user are both `matchingjobs`; the password is `abcd1234`. To change these values, set `POSTGRES_DB`, `POSTGRES_USER`, and `POSTGRES_PASSWORD` in the repository root `.env`; Compose passes the same values to Laravel. The database port is published on localhost only.
 
-  - `harukky-files` - for files
+- To run a frontend locally with Vite instead of its Docker/Nginx image, install its dependencies with Yarn:
+
+  ```bash
+  for app in public company admin; do
+    (cd "frontend/$app" && yarn install --immutable)
+  done
+  ```
+
+- File uploads use Laravel's local disk by default. To use S3-compatible storage, configure the `AWS_*` values in `backend/.env` and create the bucket in that storage provider.
 
 - Access the applications:
 
@@ -125,12 +130,7 @@ The following PHP modules are required for the backend:
 - **Note**: If applications don't load properly, rebuild the containers:
 
   ```bash
-  make build
-  make up
-
-  # Or without Make:
-  docker compose build
-  docker compose up -d --remove-orphans
+  docker compose up -d --build --remove-orphans
   ```
 
 ### PHP Package Updates
@@ -138,10 +138,7 @@ The following PHP modules are required for the backend:
 When PHP packages are added during development, run:
 
 ```bash
-make command:api command="composer install"
-
-# Or without Make:
-docker compose exec api composer install
+docker compose exec --user www-data api composer install
 ```
 
 ### Database Migration
@@ -149,10 +146,7 @@ docker compose exec api composer install
 When database schema changes are made during development:
 
 ```bash
-make command:api command="php artisan migrate"
-
-# Or without Make:
-docker compose exec api php artisan migrate
+docker compose exec --user www-data api php artisan migrate
 ```
 
 ### Database Seed
@@ -160,10 +154,7 @@ docker compose exec api php artisan migrate
 When database seed is needed during development:
 
 ```bash
-make command:api command="php artisan db:seed"
-
-# Or without Make:
-docker compose exec api php artisan db:seed
+docker compose exec --user www-data api php artisan db:seed
 ```
 
 ### Database Reset
@@ -171,10 +162,7 @@ docker compose exec api php artisan db:seed
 To reset the database during development:
 
 ```bash
-make command:api command="php artisan migrate:fresh --seed"
-
-# Or without Make:
-docker compose exec api php artisan migrate:fresh --seed
+docker compose exec --user www-data api php artisan migrate:fresh --seed
 ```
 
 ### Xdebug with PhpStorm
@@ -188,8 +176,6 @@ docker compose exec api php artisan migrate:fresh --seed
 2. Restart Docker containers:
 
    ```bash
-   make down-up
-   # Or without Make:
    docker compose down
    docker compose up -d --remove-orphans
    ```
@@ -205,10 +191,7 @@ Email sending uses Laravel's [queue system](https://laravel.com/docs/queues).
 To process emails, start the queue worker:
 
 ```bash
-make command:api command="php artisan queue:work"
-
-# Or without Make:
-docker compose exec api php artisan queue:work
+docker compose exec --user www-data api php artisan queue:work
 ```
 
 ### Local Mail Testing Environment
@@ -226,12 +209,9 @@ To improve IDE autocompletion, we use [Laravel IDE Helper](https://github.com/ba
 When models are modified, regenerate helper files:
 
 ```bash
-make ide_helper
-
-# Or without Make:
-docker compose exec api php artisan ide-helper:generate
-docker compose exec api php artisan ide-helper:models -N
-docker compose exec api php artisan ide-helper:meta
+docker compose exec --user www-data api php artisan ide-helper:generate
+docker compose exec --user www-data api php artisan ide-helper:models -N
+docker compose exec --user www-data api php artisan ide-helper:meta
 ```
 
 ### Additional Commands
@@ -239,68 +219,41 @@ docker compose exec api php artisan ide-helper:meta
 **View logs**:
 
 ```bash
-make logs
-
-# Or without Make:
 docker compose logs -f
 ```
 
 **Shell access**:
 
 ```bash
-make shell:api
-
-# Or without Make:
-docker compose exec api sh
+docker compose exec --user www-data api sh
 ```
 
 **Container status**:
 
 ```bash
-make ps
-
-# Or without Make:
 docker compose ps
 ```
 
 **Format code**:
 
 ```bash
-make formatter
-
-# Or without Make:
-docker compose exec api vendor/bin/php-cs-fixer fix
+docker compose exec --user www-data api vendor/bin/php-cs-fixer fix
 ```
 
 **Restart workers**:
 
 ```bash
-make restart_worker
-
-# Or without Make:
-docker compose exec api php artisan queue:restart
+docker compose exec --user www-data api php artisan queue:restart
 ```
 
 **Stop containers**:
 
 ```bash
-make down
-# Or without Make:
-
 docker compose down
 ```
 
 **Stop containers and remove volumes**:
 
 ```bash
-make down:with-volumes
-
-# Or without Make:
 docker compose down -v
-```
-
-For all available Make commands, run:
-
-```bash
-make help
 ```

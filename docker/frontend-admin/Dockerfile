@@ -1,11 +1,12 @@
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
-COPY ./frontend/admin/package.json ./
-COPY ./frontend/admin/yarn.lock ./
+RUN corepack enable
 
-RUN yarn install
+COPY ./frontend/admin/package.json ./frontend/admin/yarn.lock ./frontend/admin/.yarnrc.yml ./
+
+RUN yarn install --immutable
 
 COPY ./frontend/admin .
 

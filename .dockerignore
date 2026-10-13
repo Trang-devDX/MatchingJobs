@@ -1,0 +1,11 @@
+.git
+.git/**
+**/node_modules
+**/dist
+**/dist-ssr
+**/vendor
+**/.yarn
+**/.env
+**/.env.*
+!**/.env.example
+**/auth.json

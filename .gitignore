@@ -1,2 +1,10 @@
 .env
+.env.*
+!.env.example
 node_modules
+
+# Yarn generated files and local install state
+**/.yarn/cache
+**/.yarn/install-state.gz
+**/.yarn/unplugged
+**/.yarn/build-state.yml
