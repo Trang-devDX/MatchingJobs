@@ -1,10 +1,11 @@
+name: matchingjobs
+
 networks:
   harukky-network:
     driver: bridge
 
 volumes:
   postgres_data:
-  minio_data:
 
 services:
   frontend-public:
@@ -15,9 +16,6 @@ services:
       - harukky-network
     ports:
       - ${FRONTEND_PUBLIC_PORT:-5175}:80
-    depends_on:
-      api:
-        condition: service_started
     restart: unless-stopped
 
   frontend-company:
@@ -28,9 +26,6 @@ services:
       - harukky-network
     ports:
       - ${FRONTEND_COMPANY_PORT:-5174}:80
-    depends_on:
-      api:
-        condition: service_started
     restart: unless-stopped
 
   frontend-admin:
@@ -41,29 +36,35 @@ services:
       - harukky-network
     ports:
       - ${FRONTEND_ADMIN_PORT:-5173}:80
-    depends_on:
-      api:
-        condition: service_started
     restart: unless-stopped
 
   api:
-    build: ./docker/backend
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+      args:
+        UID: ${UID:-1000}
     volumes:
       - ./backend:/usr/share/nginx/html/laravel
     networks:
       - harukky-network
     ports:
       - ${API_PORT:-8000}:80
-    user: www-data:www-data
     environment:
       XDEBUG_MODE: ${XDEBUG_MODE:-off}
+      DB_CONNECTION: pgsql
+      DB_HOST: psql
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-matchingjobs}
+      DB_USERNAME: ${POSTGRES_USER:-username}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-abcd1234}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MAIL_HOST: mailcatcher
+      MAIL_PORT: 1025
     depends_on:
-      psql:
-        condition: service_started
-      redis:
-        condition: service_started
-      minio:
-        condition: service_started
+      - psql
+      - redis
     restart: unless-stopped
 
   psql:
@@ -72,11 +73,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PORT: 5432
-      POSTGRES_DB: ${POSTGRES_DB:-harukky}
-      POSTGRES_USER: ${POSTGRES_USER:-harukky}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-harukky}
+      POSTGRES_DB: ${POSTGRES_DB:-matchingjobs}
+      POSTGRES_USER: ${POSTGRES_USER:-username}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-abcd1234}
     ports:
-      - ${POSTGRES_PORT:-5432}:5432
+      - 127.0.0.1:${POSTGRES_PORT:-5432}:5432
     networks:
       - harukky-network
     restart: unless-stopped
@@ -84,26 +85,11 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - ${REDIS_PORT:-6379}:6379
+      - 127.0.0.1:${REDIS_PORT:-6379}:6379
     networks:
       - harukky-network
     restart: unless-stopped
   
-  minio:
-    image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
-    command: minio server /data --console-address ":9001"
-    volumes:
-      - minio_data:/data
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio123}
-    ports:
-      - ${MINIO_PORT:-9000}:9000
-      - ${MINIO_PORT_CONSOLE:-9001}:9001
-    networks:
-      - harukky-network
-    restart: unless-stopped
-
   mailcatcher:
     image: dockage/mailcatcher:0.7.1
     ports:
