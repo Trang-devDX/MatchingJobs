@@ -4,14 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('histories', function (Blueprint $table) {
+        Schema::create('histories', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->uuid('process_id');
             $table->uuidMorphs('target');
@@ -47,7 +46,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('histories');
         Schema::dropIfExists('history_details');
+        Schema::dropIfExists('histories');
     }
 };

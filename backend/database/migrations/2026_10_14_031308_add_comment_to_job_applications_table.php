@@ -4,14 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
+        Schema::table('job_applications', function (Blueprint $table) {
+            $table->text('comment')->nullable();
+        });
     }
 
     /**
@@ -19,6 +20,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('DROP EXTENSION IF EXISTS "uuid-ossp";');
+        Schema::table('job_applications', function (Blueprint $table) {
+            $table->dropColumn('comment');
+        });
     }
 };
