@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class () extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('job_listing_medias', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('job_listing_id');
+            $table->uuid('media_id');
+            $table->timestamps();
+
+            // Foreign keys
+            $table->foreign('job_listing_id')->references('id')->on('job_listings')->onDelete('cascade');
+            $table->foreign('media_id')->references('id')->on('medias')->onDelete('cascade');
+
+            // Indexes
+            $table->index(['job_listing_id', 'media_id']);
+            $table->unique(['job_listing_id', 'media_id'], 'job_listing_media_unique');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('job_listing_medias');
+    }
+};
