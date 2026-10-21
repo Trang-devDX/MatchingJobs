@@ -72,12 +72,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PORT: 5432
+      POSTGRES_PORT: 5433
       POSTGRES_DB: ${POSTGRES_DB:-matchingjobs}
       POSTGRES_USER: ${POSTGRES_USER:-username}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-abcd1234}
     ports:
-      - 127.0.0.1:${POSTGRES_PORT:-5432}:5432
+      - 127.0.0.1:${POSTGRES_PORT:-5433}:5432
     networks:
       - harukky-network
     restart: unless-stopped
