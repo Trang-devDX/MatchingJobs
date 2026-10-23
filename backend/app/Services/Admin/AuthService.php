@@ -52,7 +52,10 @@ class AuthService
         $this->administratorRepository->updateLastLoginAt($administrator->id, now());
 
         if ($deviceToken = Arr::get($data, 'device_token')) {
-            $this->deviceTokenRepository->upsertByToken($deviceToken, $administrator->user_id);
+            $this->deviceTokenRepository->upsertByToken(
+                $deviceToken,
+                $administrator->user_id,
+            );
         }
 
         return [

@@ -76,7 +76,7 @@ class AuthController extends Controller
 
     public function updateDeviceToken(DeviceTokenUpdateRequest $request): JsonResponse
     {
-        $this->authService->updateDeviceToken($request->validated('device_token'));
+        $this->authService->updateDeviceToken($request->validated('token'));
 
         return ApiResponse::success();
     }

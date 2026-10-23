@@ -13,6 +13,8 @@ class DeviceTokenUpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['device_token' => ['required', 'string']];
+        return [
+            'token' => ['required', 'string'],
+        ];
     }
 }

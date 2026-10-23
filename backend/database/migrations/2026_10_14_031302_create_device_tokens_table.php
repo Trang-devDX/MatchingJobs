@@ -12,12 +12,13 @@ return new class () extends Migration {
     {
         Schema::create('device_tokens', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id');
-            $table->text('token');
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->text('token')->unique();
             $table->string('type')->default('fcm');
+            $table->timestamp('last_used_at')->nullable();
             $table->timestamps();
 
-            $table->index(['user_id', 'token']);
+            $table->index('user_id');
         });
     }
 
