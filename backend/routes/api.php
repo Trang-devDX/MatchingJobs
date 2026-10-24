@@ -17,6 +17,6 @@ Route::prefix('admin')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
         Route::post('change-password', [AuthController::class, 'changePassword']);
-        Route::post('device-token', [AuthController::class, 'updateDeviceToken']);
+        Route::post('device-tokens', [AuthController::class, 'updateDeviceToken']);
     });
 });
