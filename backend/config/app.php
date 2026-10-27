@@ -52,7 +52,11 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL'),
+
+    'admin_frontend_url' => env('ADMIN_FRONTEND_URL'),
+    'staff_frontend_url' => env('STAFF_FRONTEND_URL'),
+    'job_seeker_frontend_url' => env('JOB_SEEKER_FRONTEND_URL'),
 
     /*
     |--------------------------------------------------------------------------
