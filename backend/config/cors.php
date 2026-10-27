@@ -8,7 +8,9 @@ return [
         env('STAFF_FRONTEND_URL'),
         env('JOB_SEEKER_FRONTEND_URL'),
     ],
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '#^https?://(localhost|127\.0\.0\.1)(:\d+)?$#',
+    ],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
     'max_age' => 0,
