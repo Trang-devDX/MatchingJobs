@@ -35,4 +35,9 @@ class User extends Model
     {
         return $this->hasOne(Administrator::class);
     }
+
+    public function jobSeeker(): HasOne
+    {
+        return $this->hasOne(JobSeeker::class);
+    }
 }

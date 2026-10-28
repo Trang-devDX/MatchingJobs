@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -29,6 +30,25 @@ class JobSeeker extends Model implements Authenticatable, CanResetPasswordContra
 
     public $incrementing = false;
 
+    protected $fillable = [
+        'user_id',
+        'name',
+        'email',
+        'password',
+        'status',
+        'job_seeking_status',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'phone_number',
+        'gender',
+        'date_of_birth',
+        'email_verified_at',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
+
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
@@ -44,6 +64,11 @@ class JobSeeker extends Model implements Authenticatable, CanResetPasswordContra
     public function isActive(): bool
     {
         return $this->status === CommonStatusEnum::ACTIVE;
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getJWTIdentifier(): mixed
