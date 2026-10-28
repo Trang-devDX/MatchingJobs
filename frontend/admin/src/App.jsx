@@ -7,15 +7,10 @@ import SignedIn from './pages/home/SignedIn'
 function App() {
   const { administrator, checking, login, logout } = useAuth()
 
-  return (
-    <AuthLayout>
-      {checking ? <p className="form-intro">Checking your session…</p> : administrator ? (
-        <SignedIn administrator={administrator} onLogout={logout} />
-      ) : (
-        <AdminSignIn onLogin={login} />
-      )}
-    </AuthLayout>
-  )
+  if (checking) return <p className="session-check">Checking your session…</p>
+  if (administrator) return <SignedIn administrator={administrator} onLogout={logout} />
+
+  return <AuthLayout><AdminSignIn onLogin={login} /></AuthLayout>
 }
 
 export default App

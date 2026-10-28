@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\JobSeeker\AuthController;
+use App\Http\Controllers\Api\JobSeeker\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('jobseeker')->group(function () {
@@ -11,6 +12,7 @@ Route::prefix('jobseeker')->group(function () {
     });
 
     Route::middleware('auth:job_seekers')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index']);
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);

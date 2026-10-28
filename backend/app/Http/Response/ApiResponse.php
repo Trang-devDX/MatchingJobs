@@ -3,6 +3,7 @@
 namespace App\Http\Response;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ApiResponse
 {
@@ -12,15 +13,33 @@ class ApiResponse
      * @param mixed|null $data
      * @param string $message
      * @param int $status
+     * @param array|null $meta
      * @return JsonResponse
      */
-    public static function success(mixed $data = null, string $message = 'Success', int $status = 200): JsonResponse
+    public static function success(mixed $data = null, string $message = 'Success', int $status = 200, ?array $meta = null): JsonResponse
     {
-        return response()->json([
+        $response = [
             'success' => true,
             'data' => $data,
-            'message' => $message,
-        ], $status);
+        ];
+
+        if ($meta !== null) {
+            $response['meta'] = $meta;
+        }
+
+        $response['message'] = $message;
+
+        return response()->json($response, $status);
+    }
+
+    public static function paginated(mixed $data, LengthAwarePaginator $paginator, string $message = 'Success'): JsonResponse
+    {
+        return self::success($data, $message, meta: [
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+        ]);
     }
 
     /**

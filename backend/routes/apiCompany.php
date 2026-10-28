@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Company\AuthController;
+use App\Http\Controllers\Api\Company\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('company')->group(function () {
@@ -11,6 +12,7 @@ Route::prefix('company')->group(function () {
     });
 
     Route::middleware('auth:staffs')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index']);
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);

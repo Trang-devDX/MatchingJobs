@@ -1,5 +1,6 @@
 export const ROUTES = {
   HOME: '/',
+  JOB_SEEKERS: '/job-seekers',
 }
 
 export const STORAGE_KEYS = {
