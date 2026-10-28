@@ -40,6 +40,14 @@ return [
             'driver' => 'jwt',
             'provider' => 'administrators',
         ],
+        'staffs' => [
+            'driver' => 'jwt',
+            'provider' => 'staffs',
+        ],
+        'job_seekers' => [
+            'driver' => 'jwt',
+            'provider' => 'job_seekers',
+        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -67,6 +75,14 @@ return [
         'administrators' => [
             'driver' => 'eloquent',
             'model' => App\Models\Administrator::class,
+        ],
+        'staffs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Staff::class,
+        ],
+        'job_seekers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\JobSeeker::class,
         ],
         'users' => [
             'driver' => 'eloquent',
@@ -101,6 +117,18 @@ return [
     'passwords' => [
         'administrators' => [
             'provider' => 'administrators',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_resets'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'staffs' => [
+            'provider' => 'staffs',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_resets'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'job_seekers' => [
+            'provider' => 'job_seekers',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_resets'),
             'expire' => 60,
             'throttle' => 60,
