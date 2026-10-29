@@ -25,7 +25,7 @@ return new class () extends Migration {
             $table->foreignUuid('country_id')->nullable()->constrained(table: 'countries');
             $table->foreignUuid('island_id')->nullable()->constrained(table: 'islands');
             $table->foreignUuid('town_id')->nullable()->constrained(table: 'towns');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('viber_number')->nullable();
             $table->string('address')->nullable();
@@ -36,9 +36,6 @@ return new class () extends Migration {
             $this->addAuthorColumns($table);
         });
 
-        Schema::table('job_applications', function (Blueprint $table) {
-            $table->foreignUuid('resume_id')->nullable()->constrained('resumes');
-        });
     }
 
     /**
@@ -46,9 +43,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::table('job_applications', function (Blueprint $table) {
-            $table->dropColumn('resume_id');
-        });
         Schema::dropIfExists('resumes');
     }
 };

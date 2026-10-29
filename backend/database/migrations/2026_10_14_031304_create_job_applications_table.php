@@ -17,10 +17,15 @@ return new class () extends Migration {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users');
             $table->foreignUuid('job_listing_id')->constrained('job_listings');
+            $table->foreignUuid('resume_id')->nullable()->constrained('resumes');
             $table->integer('score')->nullable();
+            $table->decimal('text_score', 5, 2)->nullable();
+            $table->decimal('ai_score', 5, 2)->nullable();
             $table->smallInteger('job_application_status')->default(1)->comment('1: Pending, 2: Reviewed, 3: Shortlisted, 4: Interviewed, 5: Offered, 6: Rejected, 7: Withdrawn, 8: Hired');
             $table->smallInteger('rating')->nullable()->comment('1: Poor, 2: Fair, 3: Good, 4: Very Good, 5: Excellent');
             $table->text('cover_letter')->nullable();
+            $table->text('comment')->nullable();
+            $table->boolean('is_viewed')->default(true);
             $table->text('external_cv_url')->nullable();
             $table->timestamp('interview_at')->nullable();
             $table->timestamp('applied_at')->nullable();

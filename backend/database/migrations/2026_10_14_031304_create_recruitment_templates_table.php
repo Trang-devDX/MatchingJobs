@@ -15,12 +15,13 @@ return new class () extends Migration {
     {
         Schema::create('recruitment_templates', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('company_id')->nullable()->constrained('companies');
             $table->string('name');
             $table->string('title')->nullable();
             $table->smallInteger('priority')->nullable();
             $table->timestamp('expired_at')->nullable();
-            $table->decimal('salary_min')->nullable();
-            $table->decimal('salary_max')->nullable();
+            $table->decimal('salary_min', 12, 2)->nullable();
+            $table->decimal('salary_max', 12, 2)->nullable();
             $table->smallInteger('experience_level')->nullable();
             $table->boolean('use_company_location')->nullable();
             $table->foreignUuid('education_level_id')->nullable()->constrained('education_levels');
@@ -34,6 +35,10 @@ return new class () extends Migration {
             $table->text('requirements')->nullable();
             $table->text('benefits')->nullable();
             $table->smallInteger('recruitment_template_status')->nullable();
+            $table->boolean('is_sample_template')->default(true);
+            $table->smallInteger('salary_unit')->nullable();
+            $table->smallInteger('pay_frequency')->nullable();
+            $table->smallInteger('salary_type')->default(1)->nullable();
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();
             $table->timestamp('created_at')->nullable();

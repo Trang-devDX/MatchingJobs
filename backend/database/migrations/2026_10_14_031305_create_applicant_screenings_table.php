@@ -17,6 +17,13 @@ return new class () extends Migration {
             $table->uuid('id')->primary();
             $table->foreignUuid('company_id')->index()->constrained(table: 'companies');
             $table->string('name');
+            $table->boolean('is_male')->nullable();
+            $table->boolean('is_female')->nullable();
+            $table->smallInteger('min_age')->nullable();
+            $table->smallInteger('max_age')->nullable();
+            $table->foreignUuid('country_id')->nullable();
+            $table->foreignUuid('island_id')->nullable();
+            $table->foreignUuid('town_id')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();

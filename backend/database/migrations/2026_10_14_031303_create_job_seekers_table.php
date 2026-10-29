@@ -15,11 +15,15 @@ return new class () extends Migration {
     {
         Schema::create('job_seekers', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('data_source_id')->nullable()->constrained('data_sources');
             $table->foreignUuid('user_id')->index()->constrained(table: 'users');
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->nullable();
+            $table->string('login_id', 15)->nullable();
+            $table->string('temp_password', 100)->nullable();
             $table->string('password')->nullable();
             $table->smallInteger('status')->comment('1: Active, 9: Disabled');
+            $table->smallInteger('register_type')->comment('1: Old Register, 2: Admin Register, 3: Job Seeker Register')->default(1);
             $table->smallInteger('job_seeking_status')->nullable()->comment('1: Seeking, 2: Not Seeking');
 
             $table->string('first_name')->nullable();

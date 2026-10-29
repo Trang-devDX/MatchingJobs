@@ -20,7 +20,7 @@ return new class () extends Migration {
             $table->smallInteger('sort')->nullable();
             $table->string('type')->nullable();
             $table->string('title')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
