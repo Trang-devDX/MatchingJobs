@@ -61,21 +61,9 @@ return new class () extends Migration {
         // Job Listing - Skills pivot table
         Schema::create('job_listing_skills', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('job_listing_id');
-            $table->uuid('job_skill_id');
-            $table->smallInteger('proficiency_level')->nullable(); // 1=Beginner, 2=Intermediate, 3=Advanced, 4=Expert
-            $table->boolean('is_required')->default(false); // Required vs Nice-to-have
+            $table->foreignUuid('job_listing_id')->constrained('job_listings');
+            $table->string('name');
             $table->timestamps();
-
-            // Foreign keys
-            $table->foreign('job_listing_id')->references('id')->on('job_listings')->onDelete('cascade');
-            $table->foreign('job_skill_id')->references('id')->on('job_skills')->onDelete('cascade');
-
-            // Indexes
-            $table->index(['job_listing_id', 'job_skill_id']);
-            $table->index(['job_skill_id', 'proficiency_level']);
-            $table->index(['job_listing_id', 'is_required']);
-            $table->unique(['job_listing_id', 'job_skill_id'], 'job_listing_skill_unique');
         });
 
         // Job Listing - Educations pivot table

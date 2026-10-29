@@ -38,11 +38,15 @@ return new class () extends Migration {
             $table->string('logo_url')->nullable();
             $table->text('optional_description')->nullable();
             $table->text('pr_message')->nullable();
+            $table->boolean('is_ambassador')->default(false);
+            $table->smallInteger('ambassador_position')->nullable();
+            $table->string('banner_url')->nullable();
             $table->smallInteger('company_size')->nullable()->comment('1: Startup, 2: Small, 3: Medium, 4: Large, 5: Enterprise');
             $table->timestamp('verified_at')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
+            $table->boolean('created_by_admin')->nullable()->default(false);
             $this->addAuthorColumns($table);
         });
     }

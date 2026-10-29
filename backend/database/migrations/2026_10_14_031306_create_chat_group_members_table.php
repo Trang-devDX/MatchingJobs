@@ -22,6 +22,7 @@ return new class () extends Migration {
             $table->boolean('is_left')->default(false);
             $table->timestamp('left_at')->nullable();
             $table->boolean('is_muted')->default(false);
+            $table->integer('type')->nullable()->default(1);
 
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

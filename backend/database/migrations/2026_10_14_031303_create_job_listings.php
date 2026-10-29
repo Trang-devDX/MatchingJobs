@@ -22,8 +22,8 @@ return new class () extends Migration {
             $table->smallInteger('priority_status')->default(JobListingPriorityEnum::NORMAL);
             $table->string('title');
             $table->string('slug')->nullable();
-            $table->decimal('salary_min', 10, 2)->nullable();
-            $table->decimal('salary_max', 10, 2)->nullable();
+            $table->decimal('salary_min', 12, 2)->nullable();
+            $table->decimal('salary_max', 12, 2)->nullable();
             $table->smallInteger('experience_level')->nullable();
             $table->text('description')->nullable();
             $table->text('requirements')->nullable();
@@ -38,6 +38,11 @@ return new class () extends Migration {
             $table->text('address')->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
+            $table->string('external_application_url')->nullable();
+            $table->boolean('is_internal_application')->default(true);
+            $table->smallInteger('salary_unit')->nullable();
+            $table->smallInteger('pay_frequency')->nullable();
+            $table->smallInteger('salary_type')->default(1)->nullable();
             $table->integer('quantity')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamp('expired_at')->nullable();
