@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shared/*": ["../shared/*"],
+      "react": ["./node_modules/@types/react/index.d.ts"],
+      "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime.d.ts"],
+      "react-hook-form": ["./node_modules/react-hook-form/dist/index.d.ts"],
+      "react-router-dom": ["./node_modules/react-router-dom/dist/index.d.ts"],
+      "@tanstack/react-query": ["./node_modules/@tanstack/react-query/build/modern/index.d.ts"],
+      "@hookform/resolvers/zod": ["./node_modules/@hookform/resolvers/zod/dist/index.d.ts"],
+      "zod": ["./node_modules/zod/index.d.cts"],
+      "lucide-react": ["./node_modules/lucide-react/dist/lucide-react.d.ts"],
+      "clsx": ["./node_modules/clsx/clsx.d.ts"],
+      "tailwind-merge": ["./node_modules/tailwind-merge/dist/types.d.ts"]
+    }
+  },
+  "include": ["src", "../shared"]
+}
