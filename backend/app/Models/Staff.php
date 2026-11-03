@@ -11,6 +11,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -29,6 +31,26 @@ class Staff extends Model implements Authenticatable, CanResetPasswordContract, 
 
     public $incrementing = false;
 
+    protected $fillable = [
+        'user_id',
+        'company_id',
+        'is_root',
+        'status',
+        'name',
+        'email',
+        'password',
+        'position',
+        'phone_number',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'email_verified_at',
+        'avatar_url',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
+
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
@@ -36,9 +58,25 @@ class Staff extends Model implements Authenticatable, CanResetPasswordContract, 
         return [
             'password' => 'hashed',
             'status' => CommonStatusEnum::class,
+            'is_root' => 'boolean',
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function uploadedFiles(): MorphMany
+    {
+        return $this->morphMany(UploadedFile::class, 'fileable');
     }
 
     public function isActive(): bool

@@ -62,7 +62,7 @@ export function JobSeekerFormPage() {
         title={isEdit ? 'Edit jobseeker' : 'Add jobseeker'}
         description="Manage account and profile details."
       />
-      <form className="space-y-6 rounded-2xl border border-line bg-white p-6" noValidate onSubmit={submit}>
+      <form className="space-y-6 rounded-2xl border border-line bg-white p-6 shadow-sm" noValidate onSubmit={submit}>
         {formError ? <Alert>{formError}</Alert> : null}
         <div className="grid gap-4 md:grid-cols-2">
           <TextField label="First name" autoFocus error={errors.first_name?.message} {...register('first_name')} />

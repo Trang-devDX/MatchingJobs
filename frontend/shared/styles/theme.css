@@ -1,12 +1,18 @@
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
   --color-ink: #172b4d;
+  --color-navy: #315a72;
   --color-brand: #225ca5;
   --color-brand-bright: #3973c6;
+  --color-accent: #128a84;
   --color-muted: #748197;
   --color-danger: #b42318;
-  --color-canvas: #f4f7fb;
-  --color-line: #e3e8f0;
+  --color-canvas: #f3f6f8;
+  --color-line: #e6ebf0;
+  --color-success: #389e0d;
+  --color-success-soft: #f6ffed;
+  --color-warn: #d48806;
+  --color-warn-soft: #fff7e6;
 }
 
 @layer base {
@@ -28,7 +34,7 @@
   input:focus-visible,
   select:focus-visible,
   a:focus-visible {
-    outline: 3px solid rgb(57 115 198 / 28%);
+    outline: 3px solid rgb(18 138 132 / 28%);
     outline-offset: 2px;
   }
 }

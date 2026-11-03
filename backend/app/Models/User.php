@@ -40,4 +40,9 @@ class User extends Model
     {
         return $this->hasOne(JobSeeker::class);
     }
+
+    public function staff(): HasOne
+    {
+        return $this->hasOne(Staff::class);
+    }
 }

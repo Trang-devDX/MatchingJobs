@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources\Admin\Auth;
 
+use App\Services\Files\FileStore;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileResource extends JsonResource
 {
@@ -21,7 +21,7 @@ class ProfileResource extends JsonResource
             'last_login_at' => $this->last_login_at?->toAtomString(),
             'created_at' => $this->created_at?->toAtomString(),
             'updated_at' => $this->updated_at?->toAtomString(),
-            'avatar_url' => $this->avatar_url ? Storage::disk('public')->url($this->avatar_url) : null,
+            'avatar_url' => app(FileStore::class)->url($this->avatar_url),
             'roles' => $this->getRoleNames(),
         ];
     }

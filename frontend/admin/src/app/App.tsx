@@ -8,7 +8,12 @@ import { NotFound } from '@shared/ui/NotFound'
 import { guardCopy } from '@/constants/copy'
 import { ROUTES } from '@/constants/routes'
 import { AuthPage } from '@/pages/auth/AuthPage'
+import { CompanyDetailPage } from '@/pages/companies/CompanyDetailPage'
+import { CompanyFormPage } from '@/pages/companies/CompanyFormPage'
+import { CompanyListPage } from '@/pages/companies/CompanyListPage'
+import { StaffFormPage } from '@/pages/companies/StaffFormPage'
 import { DashboardPage } from '@/pages/dashboard/DashboardPage'
+import { ProfilePage } from '@/pages/profile/ProfilePage'
 import { JobSeekerDetailPage } from '@/pages/job-seekers/JobSeekerDetailPage'
 import { JobSeekerFormPage } from '@/pages/job-seekers/JobSeekerFormPage'
 import { JobSeekerListPage } from '@/pages/job-seekers/JobSeekerListPage'
@@ -48,6 +53,13 @@ export function App() {
             <Route element={<RequireAuth loginPath={ROUTES.LOGIN} copy={guardCopy} />}>
               <Route element={<AdminShell />}>
                 <Route index element={<DashboardPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+                <Route path="companies" element={<CompanyListPage />} />
+                <Route path="companies/new" element={<CompanyFormPage />} />
+                <Route path="companies/:id" element={<CompanyDetailPage />} />
+                <Route path="companies/:id/edit" element={<CompanyFormPage />} />
+                <Route path="companies/:companyId/staff/new" element={<StaffFormPage />} />
+                <Route path="companies/:companyId/staff/:staffId/edit" element={<StaffFormPage />} />
                 <Route path="job-seekers" element={<JobSeekerListPage />} />
                 <Route path="job-seekers/new" element={<JobSeekerFormPage />} />
                 <Route path="job-seekers/:id" element={<JobSeekerDetailPage />} />

@@ -1,9 +1,9 @@
 import { cn } from '../lib/cn'
 
 const variants = {
-  primary: 'bg-brand text-white hover:bg-brand-bright',
+  primary: 'bg-accent text-white shadow-sm hover:bg-accent/90',
   secondary: 'border border-line bg-white text-ink hover:bg-canvas',
-  ghost: 'text-brand hover:bg-canvas',
+  ghost: 'text-accent hover:bg-canvas',
   danger: 'text-danger hover:bg-red-50',
 } as const
 

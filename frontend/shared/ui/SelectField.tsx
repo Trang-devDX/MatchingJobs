@@ -16,7 +16,7 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(funct
   const fieldId = id ?? generatedId
 
   return (
-    <label className="block text-sm font-medium" htmlFor={fieldId}>
+    <label className="block text-sm font-medium text-navy" htmlFor={fieldId}>
       <span>{label}</span>
       <select ref={ref} id={fieldId} className={cn(controlClass, 'mt-1', className)} aria-invalid={error ? true : undefined} {...props}>
         {children}

@@ -63,7 +63,7 @@ export function CredentialsForm(props: CredentialsFormProps) {
 function FormIntro({ title, intro }: { title: string; intro: string }) {
   return (
     <div className="mb-6">
-      <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+      <h2 className="text-2xl font-bold tracking-tight text-navy">{title}</h2>
       <p className="mt-2 text-sm leading-6 text-muted">{intro}</p>
     </div>
   )
@@ -123,7 +123,7 @@ function LoginForm({ copy, homePath, forgotPath, authPaths, onLogin }: Credentia
           {isSubmitting ? copy.submitting : copy.submitLogin}
         </Button>
       </form>
-      {forgotPath && <Link to={forgotPath} className="mt-4 inline-block text-sm font-medium text-brand">{copy.forgotLink}</Link>}
+      {forgotPath && <Link to={forgotPath} className="mt-4 inline-block text-sm font-medium text-accent">{copy.forgotLink}</Link>}
     </>
   )
 }
@@ -172,7 +172,7 @@ function ForgotForm({ copy, loginPath, onForgot }: CredentialsFormProps) {
           </Button>
         </form>
       )}
-      <Link to={loginPath} className="mt-4 inline-block text-sm font-medium text-brand">{copy.backToLogin}</Link>
+      <Link to={loginPath} className="mt-4 inline-block text-sm font-medium text-accent">{copy.backToLogin}</Link>
     </>
   )
 }
@@ -244,7 +244,7 @@ function ResetForm({ copy, loginPath, onReset }: CredentialsFormProps) {
           </Button>
         </form>
       )}
-      <Link to={loginPath} className="mt-4 inline-block text-sm font-medium text-brand">
+      <Link to={loginPath} className="mt-4 inline-block text-sm font-medium text-accent">
         {success ? copy.goToLogin : copy.backToLogin}
       </Link>
     </>
