@@ -16,7 +16,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   const fieldId = id ?? generatedId
 
   return (
-    <label className="block text-sm font-medium" htmlFor={fieldId}>
+    <label className="block text-sm font-medium text-navy" htmlFor={fieldId}>
       <span>{label}</span>
       <input
         ref={ref}

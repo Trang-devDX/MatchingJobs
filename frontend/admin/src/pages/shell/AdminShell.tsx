@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users } from 'lucide-react'
+import { Building2, CircleUser, LayoutDashboard, Users } from 'lucide-react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@shared/auth/context'
 import { AppShell } from '@shared/ui/AppShell'
@@ -11,7 +11,13 @@ export function AdminShell() {
   const location = useLocation()
   if (!user) return null
 
-  const onJobSeekers = location.pathname.startsWith(ROUTES.JOB_SEEKERS)
+  const headerTitle = location.pathname.startsWith(ROUTES.COMPANIES)
+    ? 'Companies'
+    : location.pathname.startsWith(ROUTES.PROFILE)
+      ? 'Profile'
+      : location.pathname.startsWith(ROUTES.JOB_SEEKERS)
+        ? 'Jobseeker management'
+        : 'Dashboard'
 
   return (
     <AppShell
@@ -21,10 +27,12 @@ export function AdminShell() {
       note="Manage the MatchingJobs platform"
       items={[
         { to: ROUTES.HOME, label: 'Dashboard', icon: LayoutDashboard, end: true },
+        { to: ROUTES.COMPANIES, label: 'Companies', icon: Building2 },
         { to: ROUTES.JOB_SEEKERS, label: 'Jobseekers', icon: Users },
+        { to: ROUTES.PROFILE, label: 'Profile', icon: CircleUser },
       ]}
       headerKicker="ADMIN PORTAL"
-      headerTitle={onJobSeekers ? 'Jobseeker management' : 'Dashboard'}
+      headerTitle={headerTitle}
       userName={user.name || user.email || FALLBACK_NAME}
       logoutLabel="Sign out"
       onLogout={() => {

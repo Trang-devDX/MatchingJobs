@@ -14,7 +14,7 @@ class UploadAvatarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => ['nullable', 'image', 'max:2048'],
+            'avatar' => ['nullable', 'file', 'mimes:jpeg,png,webp', 'max:2048'],
             'remove_avatar' => ['nullable', 'boolean'],
         ];
     }

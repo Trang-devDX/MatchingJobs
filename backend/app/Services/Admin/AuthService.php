@@ -9,13 +9,14 @@ use App\Http\Resources\Admin\Auth\ProfileResource;
 use App\Models\Administrator;
 use App\Repositories\AdministratorRepository;
 use App\Repositories\DeviceTokenRepository;
+use App\Enums\UploadedFileTypeEnum;
+use App\Services\Files\FileStore;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Exceptions\JWTException as JwtAuthException;
 use Tymon\JWTAuth\JWTGuard;
 
@@ -24,6 +25,7 @@ class AuthService
     public function __construct(
         private readonly AdministratorRepository $administratorRepository,
         private readonly DeviceTokenRepository $deviceTokenRepository,
+        private readonly FileStore $files,
     ) {}
 
     public function loginAdministrator(array $data): array
@@ -95,20 +97,19 @@ class AuthService
     {
         /** @var Administrator $administrator */
         $administrator = Auth::guard('administrators')->user();
-        $avatarPath = $administrator->avatar_url;
+        $avatar = Arr::get($data, 'avatar');
 
-        if ($avatarPath && (Arr::get($data, 'remove_avatar') || Arr::get($data, 'avatar'))) {
-            Storage::disk('public')->delete($avatarPath);
-            $avatarPath = null;
-        }
-
-        if (($avatar = Arr::get($data, 'avatar')) instanceof UploadedFile) {
-            $avatarPath = $avatar->store("avatars/{$administrator->id}", 'public');
-        }
-
-        return $this->administratorRepository->update($administrator->id, [
-            'avatar_url' => $avatarPath,
-        ]);
+        return $this->files->apply(
+            $administrator->avatar_url,
+            $avatar instanceof UploadedFile ? $avatar : null,
+            (bool) Arr::get($data, 'remove_avatar'),
+            "avatars/administrators/{$administrator->id}",
+            UploadedFileTypeEnum::AVATAR,
+            $administrator->user_id,
+            fn (?string $path) => $this->administratorRepository->update($administrator->id, [
+                'avatar_url' => $path,
+            ]),
+        );
     }
 
     public function logoutAdministrator(array $data = []): void

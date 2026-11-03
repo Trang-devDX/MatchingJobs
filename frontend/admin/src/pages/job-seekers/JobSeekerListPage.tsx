@@ -1,3 +1,4 @@
+import { UserRound } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { errorMessage } from '@shared/api/errors'
@@ -5,8 +6,8 @@ import { Alert } from '@shared/ui/Alert'
 import { Button } from '@shared/ui/Button'
 import { buttonClass } from '@shared/ui/buttonStyles'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { StatusPill } from '@shared/ui/StatusPill'
 import { controlClass } from '@shared/ui/control'
-import { accountStatusLabel } from '@/constants/jobSeeker'
 import { ROUTES, jobSeekerEditPath, jobSeekerPath } from '@/constants/routes'
 import { useDeleteJobSeeker, useJobSeekers } from '@/hooks/useJobSeekers'
 import { cn } from '@shared/lib/cn'
@@ -71,49 +72,31 @@ export function JobSeekerListPage() {
         </div>
       ) : null}
       {rows.length > 0 && meta ? (
-        <div className={cn('overflow-x-auto rounded-2xl border border-line bg-white', query.isFetching && 'opacity-70')}>
-          <table className="w-full text-left text-sm">
-            <thead className="text-muted">
-              <tr>
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Email</th>
-                <th className="px-4 py-3 font-medium">Phone</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium"><span className="sr-only">Actions</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((jobSeeker) => {
-                const active = Number(jobSeeker.status) === 1
-                return (
-                  <tr key={jobSeeker.id} className="border-t border-line">
-                    <td className="px-4 py-3">
-                      <Link className="font-medium text-brand" to={jobSeekerPath(jobSeeker.id)}>{jobSeeker.name || '—'}</Link>
-                    </td>
-                    <td className="px-4 py-3">{jobSeeker.email}</td>
-                    <td className="px-4 py-3">{jobSeeker.phone_number || '—'}</td>
-                    <td className="px-4 py-3">
-                      <span className={cn('rounded-full px-2.5 py-1 text-xs font-semibold', active ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-danger')}>
-                        {accountStatusLabel(jobSeeker.status)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right whitespace-nowrap">
-                      <Link className="font-medium text-brand" to={jobSeekerEditPath(jobSeeker.id)}>Edit</Link>
-                      <button
-                        type="button"
-                        className="ml-3 font-medium text-danger disabled:opacity-60"
-                        disabled={remove.isPending && remove.variables === jobSeeker.id}
-                        onClick={() => void onDelete(jobSeeker.id, jobSeeker.name || jobSeeker.email)}
-                      >
-                        {remove.isPending && remove.variables === jobSeeker.id ? 'Deleting…' : 'Delete'}
-                      </button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3">
+        <div className={cn('space-y-3', query.isFetching && 'opacity-70')}>
+          <ul className="space-y-3">
+            {rows.map((jobSeeker) => (
+              <li key={jobSeeker.id} className="flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-white px-4 py-3 shadow-sm transition hover:border-accent/40 hover:shadow-md">
+                <Link className="flex min-w-0 flex-1 items-center gap-4" to={jobSeekerPath(jobSeeker.id)}>
+                  <span className="grid size-14 place-items-center rounded-full border border-line bg-canvas text-muted"><UserRound size={20} /></span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-lg font-semibold text-navy">{jobSeeker.name || '—'}</span>
+                    <span className="mt-1 block truncate text-sm text-muted">{[jobSeeker.email, jobSeeker.phone_number].filter(Boolean).join(' · ')}</span>
+                  </span>
+                </Link>
+                <StatusPill active={Number(jobSeeker.status) === 1} />
+                <Link className="text-sm font-semibold text-accent" to={jobSeekerEditPath(jobSeeker.id)}>Edit</Link>
+                <button
+                  type="button"
+                  className="text-sm font-semibold text-danger disabled:opacity-60"
+                  disabled={remove.isPending && remove.variables === jobSeeker.id}
+                  onClick={() => void onDelete(jobSeeker.id, jobSeeker.name || jobSeeker.email)}
+                >
+                  {remove.isPending && remove.variables === jobSeeker.id ? 'Deleting…' : 'Delete'}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <span className="text-sm text-muted">Page {meta.current_page} of {meta.last_page}</span>
             <div className="flex gap-2">
               <Button variant="secondary" disabled={page <= 1 || query.isFetching} onClick={() => setPage((current) => current - 1)}>Previous</Button>

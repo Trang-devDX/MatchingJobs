@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "react": ["../admin/node_modules/@types/react/index.d.ts"],
+      "react/jsx-runtime": ["../admin/node_modules/@types/react/jsx-runtime.d.ts"],
+      "react-hook-form": ["../admin/node_modules/react-hook-form/dist/index.d.ts"],
+      "react-router-dom": ["../admin/node_modules/react-router-dom/dist/index.d.ts"],
+      "@tanstack/react-query": ["../admin/node_modules/@tanstack/react-query/build/modern/index.d.ts"],
+      "@hookform/resolvers/zod": ["../admin/node_modules/@hookform/resolvers/zod/dist/index.d.ts"],
+      "zod": ["../admin/node_modules/zod/index.d.cts"],
+      "lucide-react": ["../admin/node_modules/lucide-react/dist/lucide-react.d.ts"],
+      "clsx": ["../admin/node_modules/clsx/clsx.d.ts"],
+      "tailwind-merge": ["../admin/node_modules/tailwind-merge/dist/types.d.ts"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "../admin/src/vite-env.d.ts"]
+}

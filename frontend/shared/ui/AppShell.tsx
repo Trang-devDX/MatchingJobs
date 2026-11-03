@@ -41,8 +41,8 @@ export function AppShell({
   return (
     <div className="min-h-screen bg-canvas md:grid md:grid-cols-[240px_minmax(0,1fr)]">
       <aside className="flex flex-col gap-6 border-b border-line bg-white px-4 py-4 md:min-h-screen md:border-r md:border-b-0 md:px-5 md:py-6">
-        <Link to={homeHref} className="inline-flex items-center gap-3 font-semibold">
-          <span className="grid size-9 place-items-center rounded-xl bg-brand text-white">M</span>
+        <Link to={homeHref} className="inline-flex items-center gap-3 font-semibold text-navy">
+          <span className="grid size-10 place-items-center rounded-2xl bg-accent text-sm text-white">M</span>
           <span>MatchingJobs <small className="block text-xs font-medium text-muted">{product}</small></span>
         </Link>
         <div>
@@ -56,8 +56,8 @@ export function AppShell({
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) => cn(
-                    'inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium whitespace-nowrap',
-                    isActive ? 'bg-brand text-white' : 'text-ink hover:bg-canvas',
+                    'inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm whitespace-nowrap transition',
+                    isActive ? 'bg-accent font-semibold text-white' : 'font-medium text-ink hover:bg-canvas hover:text-accent',
                   )}
                 >
                   <Icon aria-hidden="true" size={16} />
@@ -73,10 +73,10 @@ export function AppShell({
         <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-line bg-white px-4 py-3 md:px-8">
           <div>
             <p className="text-xs font-semibold tracking-[0.14em] text-muted">{headerKicker}</p>
-            <p className="font-semibold">{headerTitle}</p>
+            <p className="font-semibold text-navy">{headerTitle}</p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-full bg-canvas text-sm font-semibold" aria-hidden="true">{initial}</span>
+            <span className="grid size-9 place-items-center rounded-full bg-accent/10 text-sm font-semibold text-accent" aria-hidden="true">{initial}</span>
             <span className="hidden text-sm font-medium sm:inline">{userName}</span>
             <Button variant="ghost" onClick={onLogout}>{logoutLabel}</Button>
           </div>

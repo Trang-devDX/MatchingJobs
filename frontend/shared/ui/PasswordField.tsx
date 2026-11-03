@@ -19,7 +19,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(fu
   const [visible, setVisible] = useState(false)
 
   return (
-    <div className="block text-sm font-medium">
+    <div className="block text-sm font-medium text-navy">
       <label htmlFor={fieldId}>{label}</label>
       <div className="relative mt-1">
         <input

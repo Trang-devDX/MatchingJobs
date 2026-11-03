@@ -25,8 +25,10 @@ export function createApiClient({ baseUrl, getToken, onUnauthorized }: ApiClient
     const token = options.token === undefined ? getToken() : options.token
     if (token) headers.set('Authorization', `Bearer ${token}`)
 
-    let body: string | undefined
-    if (options.body !== undefined) {
+    let body: BodyInit | undefined
+    if (options.formData) {
+      body = options.formData
+    } else if (options.body !== undefined) {
       headers.set('Content-Type', 'application/json')
       body = JSON.stringify(options.body)
     }

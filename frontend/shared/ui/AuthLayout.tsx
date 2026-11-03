@@ -17,9 +17,9 @@ export function AuthLayout({
 }) {
   return (
     <main className="grid min-h-screen lg:grid-cols-2">
-      <section className="flex flex-col justify-between bg-ink px-6 py-8 text-white sm:px-10 lg:px-12 lg:py-10">
+      <section className="flex flex-col justify-between bg-navy px-6 py-8 text-white sm:px-10 lg:px-12 lg:py-10">
         <Link to={homeHref} className="inline-flex items-center gap-3 font-semibold">
-          <span className="grid size-10 place-items-center rounded-xl bg-white text-lg text-brand">M</span>
+          <span className="grid size-10 place-items-center rounded-2xl bg-accent text-lg text-white">M</span>
           <span>MatchingJobs <small className="block text-xs font-medium tracking-wide text-white/70">{product}</small></span>
         </Link>
         <div className="my-10 max-w-md">

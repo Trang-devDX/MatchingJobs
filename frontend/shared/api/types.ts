@@ -26,6 +26,8 @@ export type LoginResult = {
 export type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
   body?: unknown
+  /** Multipart body. Do not set `body` on the same call. The browser sets the boundary. */
+  formData?: FormData
   /** `null` sends no Authorization header. Omit to attach the stored token. */
   token?: string | null
   signal?: AbortSignal
