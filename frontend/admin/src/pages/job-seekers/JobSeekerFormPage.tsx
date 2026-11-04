@@ -8,6 +8,7 @@ import { Alert } from '@shared/ui/Alert'
 import { Button } from '@shared/ui/Button'
 import { buttonClass } from '@shared/ui/buttonStyles'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { notify } from '@shared/ui/toast'
 import { SelectField } from '@shared/ui/SelectField'
 import { TextField } from '@shared/ui/TextField'
 import { ROUTES } from '@/constants/routes'
@@ -48,9 +49,12 @@ export function JobSeekerFormPage() {
     setFormError('')
     try {
       await save.mutateAsync({ id, payload: toPayload(values, isEdit) })
+      notify.success(isEdit ? 'Jobseeker updated.' : 'Jobseeker created.')
       navigate(ROUTES.JOB_SEEKERS, { replace: true })
     } catch (error) {
-      setFormError(applyApiErrors(error, setError, 'Could not save this jobseeker.'))
+      const message = applyApiErrors(error, setError, 'Could not save this jobseeker.')
+      setFormError(message)
+      notify.error(message)
     }
   })
 

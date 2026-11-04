@@ -20,6 +20,7 @@ enum JobListingStatusEnum: int
             self::PUBLISHED => 'Published',
             self::DRAFT => 'Draft',
             self::CLOSED => 'Closed',
+            self::OFFERED => 'Offered',
         };
     }
 

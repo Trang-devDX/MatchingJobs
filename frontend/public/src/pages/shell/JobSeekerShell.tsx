@@ -23,7 +23,7 @@ export function JobSeekerShell() {
       headerKicker="JOBSEEKER PORTAL"
       headerTitle={location.pathname.startsWith(ROUTES.APP) ? 'Dashboard' : 'MatchingJobs'}
       userName={name}
-      logoutLabel="Đăng xuất"
+      logoutLabel="Sign out"
       onLogout={() => {
         void logout().finally(() => navigate(ROUTES.HOME, { replace: true }))
       }}

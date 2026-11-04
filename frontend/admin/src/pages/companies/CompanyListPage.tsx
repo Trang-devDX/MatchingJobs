@@ -7,6 +7,7 @@ import { Button } from '@shared/ui/Button'
 import { buttonClass } from '@shared/ui/buttonStyles'
 import { controlClass } from '@shared/ui/control'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { notify } from '@shared/ui/toast'
 import { StatusPill } from '@shared/ui/StatusPill'
 import { ROUTES, companyEditPath, companyPath } from '@/constants/routes'
 import { useCompanies, useDeleteCompany } from '@/hooks/useCompanies'
@@ -31,8 +32,11 @@ export function CompanyListPage() {
     setActionError('')
     try {
       await remove.mutateAsync(id)
+      notify.success('Company deleted.')
     } catch (error) {
-      setActionError(errorMessage(error, 'Could not delete this company.'))
+      const message = errorMessage(error, 'Could not delete this company.')
+      setActionError(message)
+      notify.error(message)
     }
   }
 

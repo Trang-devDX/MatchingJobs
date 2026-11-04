@@ -9,6 +9,7 @@ import { Alert } from '@shared/ui/Alert'
 import { Button } from '@shared/ui/Button'
 import { MediaField } from '@shared/ui/MediaField'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { notify } from '@shared/ui/toast'
 import { SelectField } from '@shared/ui/SelectField'
 import { TextField } from '@shared/ui/TextField'
 import { companyPath, ROUTES } from '@/constants/routes'
@@ -96,9 +97,12 @@ export function CompanyFormPage() {
           remove_logo: removeLogo && !logo,
         },
       })
+      notify.success(id ? 'Company updated.' : 'Company created.')
       navigate(companyPath(saved.id), { replace: true })
     } catch (error) {
-      setFormError(applyApiErrors(error, setError, 'Could not save this company.'))
+      const message = applyApiErrors(error, setError, 'Could not save this company.')
+      setFormError(message)
+      notify.error(message)
     }
   })
 

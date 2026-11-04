@@ -8,6 +8,7 @@ import { Alert } from '@shared/ui/Alert'
 import { Button } from '@shared/ui/Button'
 import { MediaField } from '@shared/ui/MediaField'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { notify } from '@shared/ui/toast'
 import { TextField } from '@shared/ui/TextField'
 import { useProfile, useSaveProfile } from '@/hooks/useProfile'
 
@@ -75,8 +76,11 @@ export function ProfilePage() {
       setAvatar(null)
       setRemoveAvatar(false)
       setSaved('Profile saved.')
+      notify.success('Profile saved.')
     } catch (error) {
-      setFormError(applyApiErrors(error, setError, 'Could not save your profile.'))
+      const message = applyApiErrors(error, setError, 'Could not save your profile.')
+      setFormError(message)
+      notify.error(message)
     }
   })
 

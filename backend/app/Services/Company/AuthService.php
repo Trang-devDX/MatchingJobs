@@ -35,7 +35,7 @@ class AuthService
         $staff->forceFill(['last_login_at' => now()])->save();
 
         return [
-            'user' => new ProfileResource($staff->fresh()),
+            'user' => new ProfileResource($staff->fresh()->load($this->companyRelations())),
             'token' => $token,
             'token_type' => 'Bearer',
             'expires_in' => $guard->factory()->getTTL(),
@@ -47,7 +47,12 @@ class AuthService
         /** @var Staff $staff */
         $staff = Auth::guard('staffs')->user();
 
-        return $staff;
+        return $staff->load($this->companyRelations());
+    }
+
+    private function companyRelations(): array
+    {
+        return ['company.country', 'company.island', 'company.town'];
     }
 
     public function logoutStaff(): void

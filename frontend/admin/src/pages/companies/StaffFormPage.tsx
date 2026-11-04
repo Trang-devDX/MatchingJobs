@@ -9,6 +9,7 @@ import { Alert } from '@shared/ui/Alert'
 import { Button } from '@shared/ui/Button'
 import { MediaField } from '@shared/ui/MediaField'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { notify } from '@shared/ui/toast'
 import { SelectField } from '@shared/ui/SelectField'
 import { TextField } from '@shared/ui/TextField'
 import { companyPath } from '@/constants/routes'
@@ -104,9 +105,12 @@ export function StaffFormPage() {
           remove_avatar: removeAvatar && !avatar,
         },
       })
+      notify.success(staffId ? 'Staff account updated.' : 'Staff account created.')
       navigate(companyPath(companyId), { replace: true })
     } catch (error) {
-      setFormError(applyApiErrors(error, setError, 'Could not save this staff account.'))
+      const message = applyApiErrors(error, setError, 'Could not save this staff account.')
+      setFormError(message)
+      notify.error(message)
     }
   })
 

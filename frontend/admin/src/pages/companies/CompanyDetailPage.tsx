@@ -7,6 +7,7 @@ import { Button } from '@shared/ui/Button'
 import { buttonClass } from '@shared/ui/buttonStyles'
 import { controlClass } from '@shared/ui/control'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { notify } from '@shared/ui/toast'
 import { StatusPill } from '@shared/ui/StatusPill'
 import { ROUTES, companyEditPath, staffEditPath, staffNewPath } from '@/constants/routes'
 import { useCompany, useDeleteStaff, useStaffs } from '@/hooks/useCompanies'
@@ -33,8 +34,11 @@ export function CompanyDetailPage() {
     setActionError('')
     try {
       await remove.mutateAsync(staffId)
+      notify.success('Staff account deleted.')
     } catch (error) {
-      setActionError(errorMessage(error, 'Could not delete this staff account.'))
+      const message = errorMessage(error, 'Could not delete this staff account.')
+      setActionError(message)
+      notify.error(message)
     }
   }
 

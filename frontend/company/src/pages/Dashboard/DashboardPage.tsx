@@ -8,10 +8,10 @@ import { FALLBACK_NAME } from '@/constants/copy'
 import { useDashboard } from '@/hooks/useDashboard'
 
 const cards = [
-  ['total_jobs', 'Tổng tin tuyển dụng'],
-  ['published_jobs', 'Tin đang tuyển'],
-  ['total_applications', 'Tổng hồ sơ ứng tuyển'],
-  ['pending_applications', 'Hồ sơ chờ xem'],
+  ['total_jobs', 'Total job listings'],
+  ['published_jobs', 'Published listings'],
+  ['total_applications', 'Total applications'],
+  ['pending_applications', 'Applications to review'],
 ] as const
 
 export function DashboardPage() {
@@ -21,12 +21,12 @@ export function DashboardPage() {
 
   return (
     <section>
-      <PageHeader eyebrow="TỔNG QUAN DOANH NGHIỆP" title={`Xin chào, ${name}`} description="Hoạt động tuyển dụng của công ty." />
-      {dashboard.isLoading ? <p role="status" className="text-muted">Đang tải dashboard…</p> : null}
+      <PageHeader eyebrow="COMPANY OVERVIEW" title={`Hello, ${name}`} description="Hiring activity for your company." />
+      {dashboard.isLoading ? <p role="status" className="text-muted">Loading dashboard…</p> : null}
       {dashboard.isError ? (
         <Alert>
-          {errorMessage(dashboard.error, 'Không tải được dashboard.')}{' '}
-          <Button variant="ghost" onClick={() => void dashboard.refetch()}>Thử lại</Button>
+          {errorMessage(dashboard.error, 'Could not load the dashboard.')}{' '}
+          <Button variant="ghost" onClick={() => void dashboard.refetch()}>Retry</Button>
         </Alert>
       ) : null}
       {dashboard.data ? (
