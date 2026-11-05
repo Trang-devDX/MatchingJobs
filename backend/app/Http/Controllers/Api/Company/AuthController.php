@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Company;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Admin\Auth\DeviceTokenUpdateRequest;
 use App\Http\Requests\Api\Company\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Api\Company\Auth\LoginRequest;
 use App\Http\Requests\Api\Company\Auth\LogoutRequest;
@@ -49,9 +50,19 @@ class AuthController extends Controller
 
     public function logout(LogoutRequest $request): JsonResponse
     {
-        $this->authService->logoutStaff();
+        $this->authService->logoutStaff($request->validated());
 
         return ApiResponse::success(null, 'Successfully logged out.');
+    }
+
+    public function updateDeviceToken(DeviceTokenUpdateRequest $request): JsonResponse
+    {
+        $this->authService->updateDeviceToken(
+            $request->validated('token'),
+            $request->validated('replaced_token'),
+        );
+
+        return ApiResponse::success(null, 'Device token updated successfully.');
     }
 
     public function refresh(): JsonResponse

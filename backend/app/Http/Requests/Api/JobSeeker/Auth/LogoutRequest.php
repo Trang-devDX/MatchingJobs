@@ -13,6 +13,6 @@ class LogoutRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return ['device_token' => ['nullable', 'string']];
     }
 }

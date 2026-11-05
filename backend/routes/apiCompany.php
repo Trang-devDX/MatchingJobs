@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\Company\AuthController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\Company\CatalogController;
 use App\Http\Controllers\Api\Company\DashboardController;
+use App\Http\Controllers\Api\Company\JobApplicationController;
 use App\Http\Controllers\Api\Company\JobListingController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +18,11 @@ Route::prefix('company')->group(function () {
     Route::middleware('auth:staffs')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index']);
         Route::get('me', [AuthController::class, 'me']);
+        Route::post('device-tokens', [AuthController::class, 'updateDeviceToken']);
+        Route::get('notifications/count', [NotificationController::class, 'count']);
+        Route::get('notifications', [NotificationController::class, 'index']);
+        Route::post('notifications/read-all', [NotificationController::class, 'readAll']);
+        Route::post('notifications/{id}/read', [NotificationController::class, 'read'])->whereUuid('id');
         Route::post('profile', [AuthController::class, 'updateProfile']);
         Route::post('profile/avatar', [AuthController::class, 'uploadAvatar']);
         Route::post('logout', [AuthController::class, 'logout']);
@@ -35,6 +42,12 @@ Route::prefix('company')->group(function () {
             Route::get('{id}', [JobListingController::class, 'show'])->whereUuid('id');
             Route::post('{id}', [JobListingController::class, 'update'])->whereUuid('id');
             Route::delete('{id}', [JobListingController::class, 'destroy'])->whereUuid('id');
+        });
+
+        Route::prefix('job-applications')->group(function () {
+            Route::get('/', [JobApplicationController::class, 'index']);
+            Route::get('{id}', [JobApplicationController::class, 'show'])->whereUuid('id');
+            Route::post('{id}', [JobApplicationController::class, 'update'])->whereUuid('id');
         });
     });
 });

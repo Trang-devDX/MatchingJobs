@@ -15,6 +15,7 @@ class DeviceTokenUpdateRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string'],
+            'replaced_token' => ['nullable', 'string'],
         ];
     }
 }

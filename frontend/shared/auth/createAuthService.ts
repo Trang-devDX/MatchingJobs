@@ -1,4 +1,5 @@
 import type { ApiSuccess, LoginResult, RequestOptions } from '../api/types'
+import { clearDeviceToken, readDeviceToken } from '../firebase/deviceToken'
 import { toSessionUser } from './session'
 
 type Client = {
@@ -24,9 +25,13 @@ export type ResetPasswordInput = {
 export function createAuthService(client: Client, paths: AuthPaths, hasToken: () => string | null) {
   return {
     async login(credentials: { email: string; password: string }) {
+      const deviceToken = readDeviceToken()
       const result = await client.request<LoginResult>(paths.login, {
         method: 'POST',
-        body: credentials,
+        body: {
+          ...credentials,
+          ...(deviceToken ? { device_token: deviceToken } : {}),
+        },
         token: null,
       })
       return result.data
@@ -44,7 +49,15 @@ export function createAuthService(client: Client, paths: AuthPaths, hasToken: ()
 
     async logout() {
       if (!hasToken()) return
-      await client.request<null>(paths.logout, { method: 'POST', body: {} })
+      const deviceToken = readDeviceToken()
+      try {
+        await client.request<null>(paths.logout, {
+          method: 'POST',
+          body: deviceToken ? { device_token: deviceToken } : {},
+        })
+      } finally {
+        clearDeviceToken()
+      }
     },
 
     async forgotPassword(email: string) {

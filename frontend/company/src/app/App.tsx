@@ -8,6 +8,8 @@ import { NotFound } from '@shared/ui/NotFound'
 import { ToastViewport } from '@shared/ui/toast'
 import { guardCopy } from '@/constants/copy'
 import { ROUTES } from '@/constants/routes'
+import { ApplicationDetailPage } from '@/pages/applications/ApplicationDetailPage'
+import { ApplicationListPage } from '@/pages/applications/ApplicationListPage'
 import { AuthPage } from '@/pages/auth/AuthPage'
 import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { JobDetailPage } from '@/pages/jobs/JobDetailPage'
@@ -48,6 +50,8 @@ export function App() {
                 <Route path="jobs/new" element={<JobFormPage />} />
                 <Route path="jobs/:id" element={<JobDetailPage />} />
                 <Route path="jobs/:id/edit" element={<JobFormPage />} />
+                <Route path={ROUTES.APPLICATIONS} element={<ApplicationListPage />} />
+                <Route path="applications/:id" element={<ApplicationDetailPage />} />
                 <Route
                   path="*"
                   element={

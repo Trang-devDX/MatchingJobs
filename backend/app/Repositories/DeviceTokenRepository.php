@@ -37,9 +37,24 @@ class DeviceTokenRepository
 
     public function deleteByTokens(array $tokens): int
     {
+        if ($tokens === []) {
+            return 0;
+        }
+
         return DB::table('device_tokens')
             ->whereIn('token', $tokens)
             ->delete();
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function tokensForUser(string $userId): array
+    {
+        return DB::table('device_tokens')
+            ->where('user_id', $userId)
+            ->pluck('token')
+            ->all();
     }
 
     public function pruneOlderThan(int $days): int

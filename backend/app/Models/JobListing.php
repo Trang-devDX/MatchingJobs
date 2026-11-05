@@ -131,6 +131,13 @@ class JobListing extends Model
         return $this->expired_at !== null && $this->expired_at->lte(now());
     }
 
+    public function acceptsApplications(): bool
+    {
+        return $this->is_internal_application
+            && $this->job_listings_status === JobListingStatusEnum::PUBLISHED
+            && ! $this->isExpired();
+    }
+
     public function displayStatus(): JobListingStatusEnum
     {
         if ($this->isExpired()) {

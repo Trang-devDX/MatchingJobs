@@ -1,8 +1,10 @@
 import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import type { ApiSuccess, RequestOptions } from '../api/types'
 import { cn } from '../lib/cn'
 import { Button } from './Button'
+import { NotificationBell } from './NotificationBell'
 
 export type NavItem = {
   to: string
@@ -23,6 +25,8 @@ export function AppShell({
   avatarUrl,
   logoutLabel,
   onLogout,
+  notificationRequest,
+  notificationBase,
   children,
 }: {
   homeHref: string
@@ -36,6 +40,8 @@ export function AppShell({
   avatarUrl?: string | null
   logoutLabel: string
   onLogout: () => void
+  notificationRequest: <T>(path: string, options?: RequestOptions) => Promise<ApiSuccess<T>>
+  notificationBase: string
   children: ReactNode
 }) {
   const initial = userName.slice(0, 1).toUpperCase() || '?'
@@ -78,6 +84,7 @@ export function AppShell({
             <p className="font-semibold text-navy">{headerTitle}</p>
           </div>
           <div className="flex items-center gap-3">
+            <NotificationBell request={notificationRequest} base={notificationBase} />
             {avatarUrl ? (
               <img src={avatarUrl} alt="" className="size-9 rounded-full border border-line object-cover" aria-hidden="true" />
             ) : (
