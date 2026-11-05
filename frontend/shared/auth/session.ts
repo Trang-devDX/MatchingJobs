@@ -2,6 +2,7 @@ export type SessionUser = {
   id: string
   name: string | null
   email: string
+  avatar_url: string | null
 }
 
 export type SessionKeys = {
@@ -18,11 +19,17 @@ export function portalStorageKeys(portal: 'jobseeker' | 'company' | 'admin'): Se
   }
 }
 
-export function toSessionUser(user: { id: string | number; name?: string | null; email: string }): SessionUser {
+export function toSessionUser(user: {
+  id: string | number
+  name?: string | null
+  email: string
+  avatar_url?: string | null
+}): SessionUser {
   return {
     id: String(user.id),
     name: user.name?.trim() ? user.name : null,
     email: user.email,
+    avatar_url: user.avatar_url || null,
   }
 }
 

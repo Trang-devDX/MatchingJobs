@@ -7,6 +7,8 @@ use App\Http\Requests\Api\Company\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Api\Company\Auth\LoginRequest;
 use App\Http\Requests\Api\Company\Auth\LogoutRequest;
 use App\Http\Requests\Api\Company\Auth\ResetPasswordRequest;
+use App\Http\Requests\Api\Company\Auth\UpdateProfileRequest;
+use App\Http\Requests\Api\Company\Auth\UploadAvatarRequest;
 use App\Http\Resources\Company\Auth\ProfileResource;
 use App\Http\Response\ApiResponse;
 use App\Services\Company\AuthService;
@@ -26,6 +28,22 @@ class AuthController extends Controller
         return ApiResponse::success(
             new ProfileResource($this->authService->getStaffProfile()),
             'Profile retrieved successfully.',
+        );
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        return ApiResponse::success(
+            new ProfileResource($this->authService->updateStaffProfile($request->validated())),
+            'Profile updated successfully.',
+        );
+    }
+
+    public function uploadAvatar(UploadAvatarRequest $request): JsonResponse
+    {
+        return ApiResponse::success(
+            new ProfileResource($this->authService->uploadAvatar($request->validated())),
+            'Profile updated successfully.',
         );
     }
 

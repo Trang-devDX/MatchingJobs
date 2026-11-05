@@ -1,4 +1,4 @@
-import { LayoutDashboard } from 'lucide-react'
+import { CircleUser, LayoutDashboard } from 'lucide-react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@shared/auth/context'
 import { AppShell } from '@shared/ui/AppShell'
@@ -12,6 +12,11 @@ export function JobSeekerShell() {
   if (!user) return null
 
   const name = user.name || FALLBACK_NAME
+  const headerTitle = location.pathname.startsWith(ROUTES.PROFILE)
+    ? 'Profile'
+    : location.pathname.startsWith(ROUTES.APP)
+      ? 'Dashboard'
+      : 'MatchingJobs'
 
   return (
     <AppShell
@@ -19,10 +24,14 @@ export function JobSeekerShell() {
       product="Jobseeker"
       navLabel="WORKSPACE"
       note="Jobseeker portal"
-      items={[{ to: ROUTES.APP, label: 'Dashboard', icon: LayoutDashboard, end: true }]}
+      items={[
+        { to: ROUTES.APP, label: 'Dashboard', icon: LayoutDashboard, end: true },
+        { to: ROUTES.PROFILE, label: 'Profile', icon: CircleUser },
+      ]}
       headerKicker="JOBSEEKER PORTAL"
-      headerTitle={location.pathname.startsWith(ROUTES.APP) ? 'Dashboard' : 'MatchingJobs'}
+      headerTitle={headerTitle}
       userName={name}
+      avatarUrl={user.avatar_url}
       logoutLabel="Sign out"
       onLogout={() => {
         void logout().finally(() => navigate(ROUTES.HOME, { replace: true }))

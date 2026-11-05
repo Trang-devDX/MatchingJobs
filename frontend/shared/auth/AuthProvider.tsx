@@ -49,6 +49,10 @@ export function AuthProvider({ session, loginPath, me, login: signIn, logout: si
     return user
   }, [signIn, session, queryClient])
 
+  const syncUser = useCallback((user: SessionUser) => {
+    queryClient.setQueryData(PROFILE_KEY, user)
+  }, [queryClient])
+
   const logout = useCallback(async () => {
     try {
       await signOut()
@@ -75,6 +79,7 @@ export function AuthProvider({ session, loginPath, me, login: signIn, logout: si
     retry: () => {
       void profile.refetch()
     },
+    syncUser,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

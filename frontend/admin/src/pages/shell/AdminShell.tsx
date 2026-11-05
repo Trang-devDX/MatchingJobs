@@ -34,6 +34,7 @@ export function AdminShell() {
       headerKicker="ADMIN PORTAL"
       headerTitle={headerTitle}
       userName={user.name || user.email || FALLBACK_NAME}
+      avatarUrl={user.avatar_url}
       logoutLabel="Sign out"
       onLogout={() => {
         void logout().finally(() => navigate(ROUTES.LOGIN, { replace: true }))

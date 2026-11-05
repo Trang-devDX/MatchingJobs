@@ -33,7 +33,12 @@ export function createAuthService(client: Client, paths: AuthPaths, hasToken: ()
     },
 
     async me(signal: AbortSignal) {
-      const result = await client.request<{ id: string | number; name?: string | null; email: string }>(paths.me, { signal })
+      const result = await client.request<{
+        id: string | number
+        name?: string | null
+        email: string
+        avatar_url?: string | null
+      }>(paths.me, { signal })
       return toSessionUser(result.data)
     },
 

@@ -54,7 +54,7 @@ export function App() {
             <Route element={<RequireAuth loginPath={ROUTES.LOGIN} copy={guardCopy} />}>
               <Route element={<AdminShell />}>
                 <Route index element={<DashboardPage />} />
-                <Route path="profile" element={<ProfilePage />} />
+                <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
                 <Route path="companies" element={<CompanyListPage />} />
                 <Route path="companies/new" element={<CompanyFormPage />} />
                 <Route path="companies/:id" element={<CompanyDetailPage />} />

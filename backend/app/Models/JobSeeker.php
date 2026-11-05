@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -44,6 +45,7 @@ class JobSeeker extends Model implements Authenticatable, CanResetPasswordContra
         'gender',
         'date_of_birth',
         'email_verified_at',
+        'avatar_url',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -69,6 +71,11 @@ class JobSeeker extends Model implements Authenticatable, CanResetPasswordContra
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function uploadedFiles(): MorphMany
+    {
+        return $this->morphMany(UploadedFile::class, 'fileable');
     }
 
     public function getJWTIdentifier(): mixed

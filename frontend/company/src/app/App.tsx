@@ -9,10 +9,11 @@ import { ToastViewport } from '@shared/ui/toast'
 import { guardCopy } from '@/constants/copy'
 import { ROUTES } from '@/constants/routes'
 import { AuthPage } from '@/pages/auth/AuthPage'
-import { DashboardPage } from '@/pages/Dashboard/DashboardPage'
+import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { JobDetailPage } from '@/pages/jobs/JobDetailPage'
 import { JobFormPage } from '@/pages/jobs/JobFormPage'
 import { JobListPage } from '@/pages/jobs/JobListPage'
+import { ProfilePage } from '@/pages/profile/ProfilePage'
 import { CompanyShell } from '@/pages/shell/CompanyShell'
 import { AuthService } from '@/services/auth.service'
 import { session } from '@/services/session'
@@ -42,6 +43,7 @@ export function App() {
             <Route element={<RequireAuth loginPath={ROUTES.LOGIN} copy={guardCopy} />}>
               <Route element={<CompanyShell />}>
                 <Route index element={<DashboardPage />} />
+                <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
                 <Route path="jobs" element={<JobListPage />} />
                 <Route path="jobs/new" element={<JobFormPage />} />
                 <Route path="jobs/:id" element={<JobDetailPage />} />

@@ -125,9 +125,6 @@ export function StaffFormPage() {
           hint="JPEG, PNG, or WebP. Maximum 2 MB."
           preview={preview ?? null}
           shape="circle"
-          showRemove={Boolean(staffQuery.data?.avatar_url)}
-          removeChecked={removeAvatar}
-          onRemoveChange={setRemoveAvatar}
           onFile={(file) => {
             setAvatar(file)
             setLocalPreview((current) => {
@@ -135,6 +132,17 @@ export function StaffFormPage() {
               return file ? URL.createObjectURL(file) : null
             })
             setRemoveAvatar(false)
+          }}
+          onRemove={() => {
+            if (localPreview) {
+              setAvatar(null)
+              setLocalPreview((current) => {
+                if (current) URL.revokeObjectURL(current)
+                return null
+              })
+              return
+            }
+            setRemoveAvatar(true)
           }}
         />
         <div className="grid gap-4 md:grid-cols-2">
