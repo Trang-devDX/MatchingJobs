@@ -1,6 +1,6 @@
 FROM node:22-alpine AS build
 
-WORKDIR /app
+WORKDIR /frontend/public
 
 RUN corepack enable
 
@@ -8,14 +8,16 @@ COPY ./frontend/public/package.json ./frontend/public/yarn.lock ./frontend/publi
 
 RUN yarn install --immutable
 
-COPY ./frontend/public/ .
+COPY ./frontend/tsconfig.base.json /frontend/tsconfig.base.json
+COPY ./frontend/shared /frontend/shared
+COPY ./frontend/public /frontend/public
 
 RUN yarn build
 
 FROM nginx:alpine
 
 COPY ./docker/frontend-public/nginx.default.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /frontend/public/dist /usr/share/nginx/html
 
 EXPOSE 80
 
