@@ -117,9 +117,6 @@ export function CompanyFormPage() {
           label="Company logo"
           hint="JPEG, PNG, or WebP. Maximum 2 MB."
           preview={preview ?? null}
-          showRemove={Boolean(companyQuery.data?.logo_url)}
-          removeChecked={removeLogo}
-          onRemoveChange={setRemoveLogo}
           onFile={(file) => {
             setLogo(file)
             setLocalPreview((current) => {
@@ -127,6 +124,17 @@ export function CompanyFormPage() {
               return file ? URL.createObjectURL(file) : null
             })
             setRemoveLogo(false)
+          }}
+          onRemove={() => {
+            if (localPreview) {
+              setLogo(null)
+              setLocalPreview((current) => {
+                if (current) URL.revokeObjectURL(current)
+                return null
+              })
+              return
+            }
+            setRemoveLogo(true)
           }}
         />
         <div className="grid gap-4 md:grid-cols-2">

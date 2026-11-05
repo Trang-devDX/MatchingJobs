@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Company\Auth;
 
+use App\Services\Files\FileStore;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -13,7 +14,12 @@ class ProfileResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'name' => $this->name,
+            'first_name' => $this->first_name,
+            'middle_name' => $this->middle_name,
+            'last_name' => $this->last_name,
             'email' => $this->email,
+            'avatar_url' => app(FileStore::class)->url($this->avatar_url),
+            'updated_at' => $this->updated_at?->toAtomString(),
             'last_login_at' => $this->last_login_at?->toAtomString(),
             'company' => $this->company === null ? null : [
                 'id' => $this->company->id,

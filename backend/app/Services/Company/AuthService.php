@@ -2,11 +2,17 @@
 
 namespace App\Services\Company;
 
+use App\Enums\UploadedFileTypeEnum;
 use App\Exceptions\BusinessException;
+use App\Exceptions\ConflictException;
 use App\Exceptions\ValidationException;
 use App\Http\Resources\Company\Auth\ProfileResource;
 use App\Models\Staff;
+use App\Repositories\StaffRepository;
+use App\Services\Files\FileStore;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Tymon\JWTAuth\Exceptions\JWTException as JwtAuthException;
@@ -14,6 +20,11 @@ use Tymon\JWTAuth\JWTGuard;
 
 class AuthService
 {
+    public function __construct(
+        private readonly StaffRepository $staffRepository,
+        private readonly FileStore $files,
+    ) {}
+
     public function loginStaff(array $data): array
     {
         /** @var JWTGuard $guard */
@@ -48,6 +59,48 @@ class AuthService
         $staff = Auth::guard('staffs')->user();
 
         return $staff->load($this->companyRelations());
+    }
+
+    public function updateStaffProfile(array $data): Staff
+    {
+        /** @var Staff $staff */
+        $staff = Auth::guard('staffs')->user();
+        if (
+            ! $staff->updated_at
+            || Carbon::parse($data['updated_at'])->getTimestamp() !== $staff->updated_at->getTimestamp()
+        ) {
+            throw new ConflictException('This profile has changed. Refresh and try again.');
+        }
+
+        $profile = Arr::only($data, ['first_name', 'middle_name', 'last_name']);
+        $profile['name'] = implode(' ', array_filter($profile));
+
+        /** @var Staff $updated */
+        $updated = $this->staffRepository->update($staff->id, $profile);
+
+        return $updated->load($this->companyRelations());
+    }
+
+    public function uploadAvatar(array $data): Staff
+    {
+        /** @var Staff $staff */
+        $staff = Auth::guard('staffs')->user();
+        $avatar = Arr::get($data, 'avatar');
+
+        /** @var Staff $updated */
+        $updated = $this->files->apply(
+            $staff->avatar_url,
+            $avatar instanceof UploadedFile ? $avatar : null,
+            (bool) Arr::get($data, 'remove_avatar'),
+            "avatars/staffs/{$staff->company_id}",
+            UploadedFileTypeEnum::AVATAR,
+            $staff->user_id,
+            fn (?string $path) => $this->staffRepository->update($staff->id, [
+                'avatar_url' => $path,
+            ]),
+        );
+
+        return $updated->load($this->companyRelations());
     }
 
     private function companyRelations(): array

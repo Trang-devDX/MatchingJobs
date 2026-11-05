@@ -1,4 +1,4 @@
-import { Briefcase, LayoutDashboard } from 'lucide-react'
+import { Briefcase, CircleUser, LayoutDashboard } from 'lucide-react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@shared/auth/context'
 import { AppShell } from '@shared/ui/AppShell'
@@ -11,7 +11,11 @@ export function CompanyShell() {
   const location = useLocation()
   if (!user) return null
 
-  const headerTitle = location.pathname.startsWith(ROUTES.JOBS) ? 'Job listings' : 'Dashboard'
+  const headerTitle = location.pathname.startsWith(ROUTES.PROFILE)
+    ? 'Profile'
+    : location.pathname.startsWith(ROUTES.JOBS)
+      ? 'Job listings'
+      : 'Dashboard'
 
   return (
     <AppShell
@@ -22,10 +26,12 @@ export function CompanyShell() {
       items={[
         { to: ROUTES.HOME, label: 'Dashboard', icon: LayoutDashboard, end: true },
         { to: ROUTES.JOBS, label: 'Job listings', icon: Briefcase },
+        { to: ROUTES.PROFILE, label: 'Profile', icon: CircleUser },
       ]}
       headerKicker="COMPANY PORTAL"
       headerTitle={headerTitle}
       userName={user.name || FALLBACK_NAME}
+      avatarUrl={user.avatar_url}
       logoutLabel="Sign out"
       onLogout={() => {
         void logout().finally(() => navigate(ROUTES.LOGIN, { replace: true }))

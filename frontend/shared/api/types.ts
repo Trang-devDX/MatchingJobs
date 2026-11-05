@@ -17,6 +17,7 @@ export type LoginResult = {
     id: string | number
     name?: string | null
     email: string
+    avatar_url?: string | null
   }
   token: string
   token_type: string

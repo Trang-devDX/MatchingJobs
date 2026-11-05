@@ -20,6 +20,7 @@ export function AppShell({
   headerKicker,
   headerTitle,
   userName,
+  avatarUrl,
   logoutLabel,
   onLogout,
   children,
@@ -32,6 +33,7 @@ export function AppShell({
   headerKicker: string
   headerTitle: string
   userName: string
+  avatarUrl?: string | null
   logoutLabel: string
   onLogout: () => void
   children: ReactNode
@@ -76,7 +78,11 @@ export function AppShell({
             <p className="font-semibold text-navy">{headerTitle}</p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-full bg-accent/10 text-sm font-semibold text-accent" aria-hidden="true">{initial}</span>
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="" className="size-9 rounded-full border border-line object-cover" aria-hidden="true" />
+            ) : (
+              <span className="grid size-9 place-items-center rounded-full bg-accent/10 text-sm font-semibold text-accent" aria-hidden="true">{initial}</span>
+            )}
             <span className="hidden text-sm font-medium sm:inline">{userName}</span>
             <Button variant="ghost" onClick={onLogout}>{logoutLabel}</Button>
           </div>

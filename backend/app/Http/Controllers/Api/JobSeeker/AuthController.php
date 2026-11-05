@@ -7,6 +7,8 @@ use App\Http\Requests\Api\JobSeeker\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Api\JobSeeker\Auth\LoginRequest;
 use App\Http\Requests\Api\JobSeeker\Auth\LogoutRequest;
 use App\Http\Requests\Api\JobSeeker\Auth\ResetPasswordRequest;
+use App\Http\Requests\Api\JobSeeker\Auth\UpdateProfileRequest;
+use App\Http\Requests\Api\JobSeeker\Auth\UploadAvatarRequest;
 use App\Http\Resources\JobSeeker\Auth\ProfileResource;
 use App\Http\Response\ApiResponse;
 use App\Services\JobSeeker\AuthService;
@@ -26,6 +28,22 @@ class AuthController extends Controller
         return ApiResponse::success(
             new ProfileResource($this->authService->getJobSeekerProfile()),
             'Profile retrieved successfully.',
+        );
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        return ApiResponse::success(
+            new ProfileResource($this->authService->updateJobSeekerProfile($request->validated())),
+            'Profile updated successfully.',
+        );
+    }
+
+    public function uploadAvatar(UploadAvatarRequest $request): JsonResponse
+    {
+        return ApiResponse::success(
+            new ProfileResource($this->authService->uploadAvatar($request->validated())),
+            'Profile updated successfully.',
         );
     }
 
