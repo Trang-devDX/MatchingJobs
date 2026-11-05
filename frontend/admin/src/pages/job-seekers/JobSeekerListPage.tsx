@@ -6,6 +6,7 @@ import { Alert } from '@shared/ui/Alert'
 import { Button } from '@shared/ui/Button'
 import { buttonClass } from '@shared/ui/buttonStyles'
 import { PageHeader } from '@shared/ui/PageHeader'
+import { notify } from '@shared/ui/toast'
 import { StatusPill } from '@shared/ui/StatusPill'
 import { controlClass } from '@shared/ui/control'
 import { ROUTES, jobSeekerEditPath, jobSeekerPath } from '@/constants/routes'
@@ -31,8 +32,11 @@ export function JobSeekerListPage() {
     setActionError('')
     try {
       await remove.mutateAsync(id)
+      notify.success('Jobseeker deleted.')
     } catch (error) {
-      setActionError(errorMessage(error, 'Could not delete this jobseeker.'))
+      const message = errorMessage(error, 'Could not delete this jobseeker.')
+      setActionError(message)
+      notify.error(message)
     }
   }
 

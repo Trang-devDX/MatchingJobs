@@ -5,10 +5,11 @@ import { AuthProvider } from '@shared/auth/AuthProvider'
 import { GuestOnly, RequireAuth } from '@shared/auth/guards'
 import { AuthLayout } from '@shared/ui/AuthLayout'
 import { NotFound } from '@shared/ui/NotFound'
+import { ToastViewport } from '@shared/ui/toast'
 import { guardCopy } from '@/constants/copy'
 import { ROUTES } from '@/constants/routes'
 import { AuthPage } from '@/pages/auth/AuthPage'
-import { DashboardPage } from '@/pages/dashboard/DashboardPage'
+import { DashboardPage } from '@/pages/Dashboard/DashboardPage'
 import { HomePage } from '@/pages/home/HomePage'
 import { JobSeekerShell } from '@/pages/shell/JobSeekerShell'
 import { AuthService } from '@/services/auth.service'
@@ -47,15 +48,16 @@ export function App() {
               element={
                 <NotFound
                   homeHref={ROUTES.HOME}
-                  title="Không tìm thấy trang"
-                  body="Đường dẫn này không có trong cổng ứng viên."
-                  action="Về trang chủ"
+                  title="Page not found"
+                  body="This path is not part of the jobseeker portal."
+                  action="Back to home"
                 />
               }
             />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      <ToastViewport />
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />}
     </QueryClientProvider>
   )
@@ -66,10 +68,10 @@ function PublicAuthLayout() {
     <AuthLayout
       homeHref={ROUTES.HOME}
       product="Jobseeker"
-      eyebrow="DÀNH CHO ỨNG VIÊN"
-      title="Công việc tốt bắt đầu từ một kết nối đúng."
-      description="Đăng nhập để tiếp tục hành trình nghề nghiệp của bạn."
-      footnote="Cổng này dành cho ứng viên MatchingJobs."
+      eyebrow="FOR JOBSEEKERS"
+      title="Good work starts with the right connection."
+      description="Sign in to continue your career journey."
+      footnote="This portal is for MatchingJobs jobseekers."
     />
   )
 }

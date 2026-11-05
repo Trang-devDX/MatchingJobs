@@ -48,9 +48,24 @@ class Company extends Model
         return $this->belongsTo(Country::class);
     }
 
+    public function island(): BelongsTo
+    {
+        return $this->belongsTo(Island::class);
+    }
+
+    public function town(): BelongsTo
+    {
+        return $this->belongsTo(Town::class);
+    }
+
     public function staffs(): HasMany
     {
         return $this->hasMany(Staff::class);
+    }
+
+    public function jobListings(): HasMany
+    {
+        return $this->hasMany(JobListing::class);
     }
 
     public function uploadedFiles(): MorphMany

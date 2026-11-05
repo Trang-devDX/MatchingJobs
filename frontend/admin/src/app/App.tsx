@@ -5,6 +5,7 @@ import { AuthProvider } from '@shared/auth/AuthProvider'
 import { GuestOnly, RequireAuth } from '@shared/auth/guards'
 import { AuthLayout } from '@shared/ui/AuthLayout'
 import { NotFound } from '@shared/ui/NotFound'
+import { ToastViewport } from '@shared/ui/toast'
 import { guardCopy } from '@/constants/copy'
 import { ROUTES } from '@/constants/routes'
 import { AuthPage } from '@/pages/auth/AuthPage'
@@ -81,6 +82,7 @@ export function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      <ToastViewport />
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />}
     </QueryClientProvider>
   )

@@ -5,10 +5,14 @@ import { AuthProvider } from '@shared/auth/AuthProvider'
 import { GuestOnly, RequireAuth } from '@shared/auth/guards'
 import { AuthLayout } from '@shared/ui/AuthLayout'
 import { NotFound } from '@shared/ui/NotFound'
+import { ToastViewport } from '@shared/ui/toast'
 import { guardCopy } from '@/constants/copy'
 import { ROUTES } from '@/constants/routes'
 import { AuthPage } from '@/pages/auth/AuthPage'
-import { DashboardPage } from '@/pages/dashboard/DashboardPage'
+import { DashboardPage } from '@/pages/Dashboard/DashboardPage'
+import { JobDetailPage } from '@/pages/jobs/JobDetailPage'
+import { JobFormPage } from '@/pages/jobs/JobFormPage'
+import { JobListPage } from '@/pages/jobs/JobListPage'
 import { CompanyShell } from '@/pages/shell/CompanyShell'
 import { AuthService } from '@/services/auth.service'
 import { session } from '@/services/session'
@@ -38,15 +42,19 @@ export function App() {
             <Route element={<RequireAuth loginPath={ROUTES.LOGIN} copy={guardCopy} />}>
               <Route element={<CompanyShell />}>
                 <Route index element={<DashboardPage />} />
+                <Route path="jobs" element={<JobListPage />} />
+                <Route path="jobs/new" element={<JobFormPage />} />
+                <Route path="jobs/:id" element={<JobDetailPage />} />
+                <Route path="jobs/:id/edit" element={<JobFormPage />} />
                 <Route
                   path="*"
                   element={
                     <NotFound
                       embedded
                       homeHref={ROUTES.HOME}
-                      title="Không tìm thấy trang"
-                      body="Đường dẫn này không có trong cổng công ty."
-                      action="Về dashboard"
+                      title="Page not found"
+                      body="This path is not part of the company portal."
+                      action="Back to dashboard"
                     />
                   }
                 />
@@ -55,6 +63,7 @@ export function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      <ToastViewport />
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />}
     </QueryClientProvider>
   )
@@ -65,10 +74,10 @@ function CompanyAuthLayout() {
     <AuthLayout
       homeHref={ROUTES.LOGIN}
       product="Company"
-      eyebrow="DÀNH CHO DOANH NGHIỆP"
-      title="Tìm người phù hợp để cùng đi tiếp."
-      description="Quản lý hành trình tuyển dụng và kết nối đúng ứng viên."
-      footnote="Chỉ nhân viên được ủy quyền mới có thể truy cập cổng công ty."
+      eyebrow="FOR EMPLOYERS"
+      title="Find the right people to move forward with."
+      description="Manage hiring and connect with the right candidates."
+      footnote="Only authorized staff can access the company portal."
     />
   )
 }
