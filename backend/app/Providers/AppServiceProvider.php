@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Billing\StripeBillingGateway;
+use App\Services\Billing\StripeCheckoutGateway;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(StripeBillingGateway::class, StripeCheckoutGateway::class);
     }
 
     /**

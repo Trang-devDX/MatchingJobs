@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'price_id' => env('STRIPE_PRICE_ID'),
+        'success_url' => env('STRIPE_SUCCESS_URL', env('STAFF_FRONTEND_URL', 'http://localhost:5174').'/billing/result'),
+        'cancel_url' => env('STRIPE_CANCEL_URL', env('STAFF_FRONTEND_URL', 'http://localhost:5174').'/billing'),
+        'webhook_tolerance' => (int) env('STRIPE_WEBHOOK_TOLERANCE', 300),
+    ],
+
 ];

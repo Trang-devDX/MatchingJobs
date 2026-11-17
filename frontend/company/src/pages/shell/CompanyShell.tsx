@@ -1,4 +1,4 @@
-import { Briefcase, CircleUser, ClipboardList, LayoutDashboard } from 'lucide-react'
+import { Briefcase, CircleUser, ClipboardList, CreditCard, LayoutDashboard } from 'lucide-react'
 import { useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@shared/auth/context'
@@ -21,7 +21,9 @@ export function CompanyShell() {
 
   if (!user) return null
 
-  const headerTitle = location.pathname.startsWith(ROUTES.PROFILE)
+  const headerTitle = location.pathname.startsWith(ROUTES.BILLING)
+    ? 'Billing'
+    : location.pathname.startsWith(ROUTES.PROFILE)
     ? 'Profile'
     : location.pathname.startsWith(ROUTES.APPLICATIONS)
       ? 'Applications'
@@ -38,6 +40,7 @@ export function CompanyShell() {
       items={[
         { to: ROUTES.HOME, label: 'Dashboard', icon: LayoutDashboard, end: true },
         { to: ROUTES.JOBS, label: 'Job listings', icon: Briefcase },
+        { to: ROUTES.BILLING, label: 'Billing', icon: CreditCard },
         { to: ROUTES.APPLICATIONS, label: 'Applications', icon: ClipboardList },
         { to: ROUTES.PROFILE, label: 'Profile', icon: CircleUser },
       ]}

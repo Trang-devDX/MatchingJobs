@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\Company\AuthController;
-use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\Company\BillingController;
 use App\Http\Controllers\Api\Company\CatalogController;
 use App\Http\Controllers\Api\Company\DashboardController;
 use App\Http\Controllers\Api\Company\JobApplicationController;
 use App\Http\Controllers\Api\Company\JobListingController;
+use App\Http\Controllers\Api\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('company')->group(function () {
@@ -27,6 +28,12 @@ Route::prefix('company')->group(function () {
         Route::post('profile/avatar', [AuthController::class, 'uploadAvatar']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
+
+        Route::prefix('billing')->group(function () {
+            Route::get('/', [BillingController::class, 'index']);
+            Route::post('checkout', [BillingController::class, 'checkout']);
+            Route::get('payments/{id}', [BillingController::class, 'show'])->whereUuid('id');
+        });
 
         Route::get('job-industries', [CatalogController::class, 'industries']);
         Route::get('job-categories', [CatalogController::class, 'categories']);

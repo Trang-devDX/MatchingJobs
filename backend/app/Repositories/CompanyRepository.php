@@ -38,4 +38,20 @@ class CompanyRepository extends BaseRepository
 
         return $company;
     }
+
+    public function lock(string $id): Company
+    {
+        $company = $this->model->newQuery()->whereKey($id)->lockForUpdate()->first();
+
+        if (! $company instanceof Company) {
+            throw new NotFoundException('Company not found.');
+        }
+
+        return $company;
+    }
+
+    public function addJobPostingCredits(Company $company, int $amount): void
+    {
+        $company->increment('job_posting_credits', $amount);
+    }
 }
