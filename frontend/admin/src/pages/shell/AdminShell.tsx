@@ -4,6 +4,7 @@ import { useAuth } from '@shared/auth/context'
 import { AppShell } from '@shared/ui/AppShell'
 import { FALLBACK_NAME } from '@/constants/copy'
 import { ROUTES } from '@/constants/routes'
+import { api } from '@/services/api'
 
 export function AdminShell() {
   const { user, logout } = useAuth()
@@ -36,6 +37,8 @@ export function AdminShell() {
       userName={user.name || user.email || FALLBACK_NAME}
       avatarUrl={user.avatar_url}
       logoutLabel="Sign out"
+      notificationRequest={api.request}
+      notificationBase="/admin/notifications"
       onLogout={() => {
         void logout().finally(() => navigate(ROUTES.LOGIN, { replace: true }))
       }}

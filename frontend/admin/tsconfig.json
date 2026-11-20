@@ -16,5 +16,6 @@
       "tailwind-merge": ["./node_modules/tailwind-merge/dist/types.d.ts"]
     }
   },
-  "include": ["src", "../shared"]
+  "include": ["src", "../shared"],
+  "exclude": ["../shared/firebase"]
 }

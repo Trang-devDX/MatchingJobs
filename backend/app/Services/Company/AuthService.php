@@ -8,6 +8,7 @@ use App\Exceptions\ConflictException;
 use App\Exceptions\ValidationException;
 use App\Http\Resources\Company\Auth\ProfileResource;
 use App\Models\Staff;
+use App\Repositories\DeviceTokenRepository;
 use App\Repositories\StaffRepository;
 use App\Services\Files\FileStore;
 use Illuminate\Http\UploadedFile;
@@ -22,6 +23,7 @@ class AuthService
 {
     public function __construct(
         private readonly StaffRepository $staffRepository,
+        private readonly DeviceTokenRepository $deviceTokenRepository,
         private readonly FileStore $files,
     ) {}
 
@@ -44,6 +46,10 @@ class AuthService
         }
 
         $staff->forceFill(['last_login_at' => now()])->save();
+
+        if ($deviceToken = Arr::get($data, 'device_token')) {
+            $this->deviceTokenRepository->upsertByToken($deviceToken, $staff->user_id);
+        }
 
         return [
             'user' => new ProfileResource($staff->fresh()->load($this->companyRelations())),
@@ -108,9 +114,23 @@ class AuthService
         return ['company.country', 'company.island', 'company.town'];
     }
 
-    public function logoutStaff(): void
+    public function logoutStaff(array $data = []): void
     {
+        if (($deviceToken = Arr::get($data, 'device_token')) && ($staff = Auth::guard('staffs')->user())) {
+            $this->deviceTokenRepository->deleteByToken($deviceToken, $staff->user_id);
+        }
+
         Auth::guard('staffs')->logout();
+    }
+
+    public function updateDeviceToken(string $deviceToken, ?string $replacedToken = null): void
+    {
+        /** @var Staff $staff */
+        $staff = Auth::guard('staffs')->user();
+        $this->deviceTokenRepository->upsertByToken($deviceToken, $staff->user_id);
+        if ($replacedToken && $replacedToken !== $deviceToken) {
+            $this->deviceTokenRepository->deleteByToken($replacedToken, $staff->user_id);
+        }
     }
 
     public function refreshToken(): array

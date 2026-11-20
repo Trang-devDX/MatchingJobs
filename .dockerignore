@@ -8,4 +8,7 @@
 **/.env
 **/.env.*
 !**/.env.example
+!frontend/public/.env
+!frontend/company/.env
+!frontend/admin/.env
 **/auth.json
