@@ -5,8 +5,13 @@ export const ROUTES = {
   RESET_PASSWORD: '/reset-password',
   JOBS: '/jobs',
   JOB_NEW: '/jobs/new',
+  APPLICATIONS: '/applications',
   PROFILE: '/profile',
+  BILLING: '/billing',
+  BILLING_RESULT: '/billing/result',
 } as const
+
+export const applicationPath = (id: string) => `/applications/${id}`
 
 export const jobPath = (id: string) => `/jobs/${id}`
 export const jobEditPath = (id: string) => `/jobs/${id}/edit`

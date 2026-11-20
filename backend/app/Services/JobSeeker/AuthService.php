@@ -8,6 +8,7 @@ use App\Exceptions\ConflictException;
 use App\Exceptions\ValidationException;
 use App\Http\Resources\JobSeeker\Auth\ProfileResource;
 use App\Models\JobSeeker;
+use App\Repositories\DeviceTokenRepository;
 use App\Repositories\JobSeekerRepository;
 use App\Services\Files\FileStore;
 use Illuminate\Http\UploadedFile;
@@ -22,6 +23,7 @@ class AuthService
 {
     public function __construct(
         private readonly JobSeekerRepository $jobSeekerRepository,
+        private readonly DeviceTokenRepository $deviceTokenRepository,
         private readonly FileStore $files,
     ) {}
 
@@ -44,6 +46,10 @@ class AuthService
         }
 
         $jobSeeker->forceFill(['last_login_at' => now()])->save();
+
+        if ($deviceToken = Arr::get($data, 'device_token')) {
+            $this->deviceTokenRepository->upsertByToken($deviceToken, $jobSeeker->user_id);
+        }
 
         return [
             'user' => new ProfileResource($jobSeeker->fresh()),
@@ -103,9 +109,23 @@ class AuthService
         return $updated;
     }
 
-    public function logoutJobSeeker(): void
+    public function logoutJobSeeker(array $data = []): void
     {
+        if (($deviceToken = Arr::get($data, 'device_token')) && ($jobSeeker = Auth::guard('job_seekers')->user())) {
+            $this->deviceTokenRepository->deleteByToken($deviceToken, $jobSeeker->user_id);
+        }
+
         Auth::guard('job_seekers')->logout();
+    }
+
+    public function updateDeviceToken(string $deviceToken, ?string $replacedToken = null): void
+    {
+        /** @var JobSeeker $jobSeeker */
+        $jobSeeker = Auth::guard('job_seekers')->user();
+        $this->deviceTokenRepository->upsertByToken($deviceToken, $jobSeeker->user_id);
+        if ($replacedToken && $replacedToken !== $deviceToken) {
+            $this->deviceTokenRepository->deleteByToken($replacedToken, $jobSeeker->user_id);
+        }
     }
 
     public function refreshToken(): array

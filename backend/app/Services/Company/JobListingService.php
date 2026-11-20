@@ -9,6 +9,7 @@ use App\Exceptions\ForbiddenException;
 use App\Exceptions\ValidationException;
 use App\Models\JobListing;
 use App\Models\Staff;
+use App\Repositories\CompanyRepository;
 use App\Repositories\JobListingRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -19,7 +20,10 @@ use Illuminate\Support\Str;
 
 class JobListingService
 {
-    public function __construct(private readonly JobListingRepository $jobListings) {}
+    public function __construct(
+        private readonly JobListingRepository $jobListings,
+        private readonly CompanyRepository $companies,
+    ) {}
 
     public function list(array $filters): LengthAwarePaginator
     {
@@ -42,10 +46,14 @@ class JobListingService
         $attributes['priority_status'] = $attributes['priority_status'] ?? JobListingPriorityEnum::NORMAL->value;
         $attributes['is_internal_application'] = $attributes['is_internal_application'] ?? true;
 
-        return DB::transaction(fn () => $this->jobListings->createForCompany(
-            Arr::except($attributes, $this->relationKeys()),
-            Arr::only($attributes, $this->relationKeys()),
-        ));
+        return DB::transaction(function () use ($staff, $attributes) {
+            $this->consumeCreditIfPublishing($staff->company_id, $attributes, null);
+
+            return $this->jobListings->createForCompany(
+                Arr::except($attributes, $this->relationKeys()),
+                Arr::only($attributes, $this->relationKeys()),
+            );
+        });
     }
 
     public function update(string $id, array $attributes): JobListing
@@ -70,11 +78,15 @@ class JobListingService
         }
         $attributes['updated_by'] = $staff->user_id;
 
-        return DB::transaction(fn () => $this->jobListings->updateListing(
-            $jobListing,
-            Arr::except($attributes, [...$this->relationKeys(), 'updated_at']),
-            Arr::only($attributes, $this->relationKeys()),
-        ));
+        return DB::transaction(function () use ($staff, $jobListing, $attributes) {
+            $this->consumeCreditIfPublishing($staff->company_id, $attributes, $jobListing);
+
+            return $this->jobListings->updateListing(
+                $jobListing,
+                Arr::except($attributes, [...$this->relationKeys(), 'updated_at']),
+                Arr::only($attributes, $this->relationKeys()),
+            );
+        });
     }
 
     public function delete(string $id): void
@@ -84,6 +96,29 @@ class JobListingService
         $jobListing->deleted_by = $staff->user_id;
         $jobListing->save();
         $jobListing->delete();
+    }
+
+    private function consumeCreditIfPublishing(string $companyId, array $attributes, ?JobListing $current): void
+    {
+        if (! $this->needsCredit($current, $attributes)) {
+            return;
+        }
+
+        $company = $this->companies->lock($companyId);
+        if ($company->job_posting_credits < 1) {
+            throw new ValidationException('You need a job posting credit to publish this listing.');
+        }
+
+        $this->companies->addJobPostingCredits($company, -1);
+    }
+
+    private function needsCredit(?JobListing $current, array $attributes): bool
+    {
+        if ((int) $attributes['job_listings_status'] !== JobListingStatusEnum::PUBLISHED->value) {
+            return false;
+        }
+
+        return $current === null || $current->job_listings_status !== JobListingStatusEnum::PUBLISHED;
     }
 
     private function staff(): Staff
