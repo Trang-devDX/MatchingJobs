@@ -30,6 +30,7 @@ class Company extends Model
         'address',
         'logo_url',
         'created_by_admin',
+        'job_posting_credits',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -40,6 +41,7 @@ class Company extends Model
         return [
             'status' => CommonStatusEnum::class,
             'created_by_admin' => 'boolean',
+            'job_posting_credits' => 'integer',
         ];
     }
 
@@ -66,6 +68,11 @@ class Company extends Model
     public function jobListings(): HasMany
     {
         return $this->hasMany(JobListing::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function uploadedFiles(): MorphMany

@@ -7,6 +7,8 @@ export const ROUTES = {
   JOB_NEW: '/jobs/new',
   APPLICATIONS: '/applications',
   PROFILE: '/profile',
+  BILLING: '/billing',
+  BILLING_RESULT: '/billing/result',
 } as const
 
 export const applicationPath = (id: string) => `/applications/${id}`

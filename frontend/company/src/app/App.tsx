@@ -11,6 +11,8 @@ import { ROUTES } from '@/constants/routes'
 import { ApplicationDetailPage } from '@/pages/applications/ApplicationDetailPage'
 import { ApplicationListPage } from '@/pages/applications/ApplicationListPage'
 import { AuthPage } from '@/pages/auth/AuthPage'
+import { BillingPage } from '@/pages/billing/BillingPage'
+import { BillingResultPage } from '@/pages/billing/BillingResultPage'
 import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { JobDetailPage } from '@/pages/jobs/JobDetailPage'
 import { JobFormPage } from '@/pages/jobs/JobFormPage'
@@ -46,6 +48,8 @@ export function App() {
               <Route element={<CompanyShell />}>
                 <Route index element={<DashboardPage />} />
                 <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+                <Route path={ROUTES.BILLING} element={<BillingPage />} />
+                <Route path={ROUTES.BILLING_RESULT} element={<BillingResultPage />} />
                 <Route path="jobs" element={<JobListPage />} />
                 <Route path="jobs/new" element={<JobFormPage />} />
                 <Route path="jobs/:id" element={<JobDetailPage />} />
